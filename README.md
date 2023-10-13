@@ -13,6 +13,6 @@ Thanks for installing!'
 If you can't install JSC through the website, here are some ways to fix this:
     - Re-open your browser
     - Refresh page
-    - Direct install: github.com/janse1/jsc_cli
+    - Direct install: github.com/jansel1/jsc_cli
 
 # JSC Alpha v0.0.0 
