@@ -10,7 +10,10 @@ import socket
 import re
 import sys
 import shutil
+import socketserver
 
+from threading import Thread
+from http.server import SimpleHTTPRequestHandler
 from pathlib import Path
 
 os.system('cls')
@@ -464,6 +467,84 @@ def wifi(a, b):
     if b[0] == "wif":
         print(str(subprocess.check_output("netsh wlan show profiles name=*")).replace("\\n", "\n").replace("\\r", "\r"))
 
+def jsc(a, b):
+    if b[0] == "jsc":
+        webbrowser.open('jansel.pages.dev')
+        print("\t\tThanks for using JSC!")
+
+PRINTABLE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
+
+def Random(a, b):
+    if b[0] == "randint":
+        try:
+            MIN_NUMBER = int(b[1])
+            MAX_NUMBER = int(b[2])
+
+        except: 
+            Marg()
+            return
+        
+        try:
+            if not MIN_NUMBER > MAX_NUMBER:
+                RESULT = random.randint(MIN_NUMBER, MAX_NUMBER)
+
+                print(f"\t\t{RESULT}")
+            else:
+                print(f"\t\tCannot have the minimum number bigger than the maximum. Did you mean: randint {MAX_NUMBER} {MIN_NUMBER} ?")
+        except:
+            print("\t\tCould not get random number.")
+
+    elif b[0] == "randstr":
+        CanUseLetters = True
+
+        try:
+            LETTERS = b[1]
+        except: 
+            CanUseLetters = False
+
+        if CanUseLetters:
+            RESULT = random.choice(list(LETTERS))
+
+            print(f"\t\t{RESULT}")
+        else:
+            RESULT = random.choice(PRINTABLE)
+
+            print(f"\t\t{RESULT}")
+    
+
+def Localhost(a, b): # Still in BETA, this has major issues.
+    if b[0] in ["localhost", "host"]:
+        try:
+            PATH = b[1]
+        except: Marg()
+
+        Handler = SimpleHTTPRequestHandler
+
+        with socketserver.TCPServer(("", 8000), Handler) as host:
+            try:
+                os.chdir(path=PATH)
+                print(f"\t\tPort: 8000, Adress: localhost:8000, HTML Path: {PATH}")
+
+                Thread(target=exec("host.serve_forever()"))
+
+            except:
+                print("\t\tInvalid file direcotry, or `host.serve_forever` is not working, or user quit.")
+
+def Explorer(a, b): # simple function, but ya' never know ;)
+    if b[0] in ["explorer.exe", "explorer", "exp", "exp.exe"]:
+        os.system("explorer.exe")
+
+def Open(a, b):
+    if b[0] == "$":
+        try:
+            PROGRAM_TO_OPEN = b[1]
+        except: Marg()
+
+        try:
+            os.system(f"{PROGRAM_TO_OPEN}.exe")
+        except: 
+            print("\t\tCould not open program, make sure the program name is correct.")
+
 def Disv(Input, _Input):
     if _Input[0] in ["jsc", "??", "cool_ascii_text", "v"]:
         DIS_V()
@@ -517,7 +598,12 @@ CommandList = [ # all the darn commands i came up wif!
     working,
     Hide,
     _Time,
-    wifi
+    wifi,
+    jsc,
+    Random,
+    Localhost,
+    Explorer,
+    Open
 ]
 
 os.system('cls')
