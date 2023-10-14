@@ -510,25 +510,6 @@ def Random(a, b):
             RESULT = random.choice(PRINTABLE)
 
             print(f"\t\t{RESULT}")
-    
-
-def Localhost(a, b): # Still in BETA, this has major issues.
-    if b[0] in ["localhost", "host"]:
-        try:
-            PATH = b[1]
-        except: Marg()
-
-        Handler = SimpleHTTPRequestHandler
-
-        with socketserver.TCPServer(("", 8000), Handler) as host:
-            try:
-                os.chdir(path=PATH)
-                print(f"\t\tPort: 8000, Adress: localhost:8000, HTML Path: {PATH}")
-
-                Thread(target=exec("host.serve_forever()"))
-
-            except:
-                print("\t\tInvalid file direcotry, or `host.serve_forever` is not working, or user quit.")
 
 def Explorer(a, b): # simple function, but ya' never know ;)
     if b[0] in ["explorer.exe", "explorer", "exp", "exp.exe"]:
@@ -570,9 +551,6 @@ def Disv(Input, _Input):
 #######################
 #######################
 
-
-
-
 CommandList = [ # all the darn commands i came up wif!
     Return,
     Clear,
@@ -601,7 +579,6 @@ CommandList = [ # all the darn commands i came up wif!
     wifi,
     jsc,
     Random,
-    Localhost,
     Explorer,
     Open
 ]
@@ -612,11 +589,6 @@ os.system('color 3f')
 CHARACTER = ""
 
 os.system(f"cd {CWD}")
-
-with open("Settings.json") as data:
-    d = json.load(data)
-    CHARACTER = str(d["Character"])
-
 
 ##############################
 ##############################
