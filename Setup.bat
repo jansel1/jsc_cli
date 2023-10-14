@@ -1,1 +1,0 @@
-python JSC\src\setup\main.py
