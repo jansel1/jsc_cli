@@ -311,7 +311,9 @@ def Corrupt(a, b):
     if b[0] == "cor":
         try:
             File = b[1]
-        except: Marg()
+        except: 
+            Marg()
+            return
 
         if os.path.exists(File) == False:
             print("\t\tDirectory dosen't exist")
@@ -332,10 +334,10 @@ def C(a, b):
             Directory = b[1]
         except:
             Marg()
-
+            return
         try:
             os.mkdir(Directory)
-            print(f"\t\tMade directory/folder: {Directory}")
+            print(f"\t\tMade directory/folder: (CD) - {Directory}")
         except:
             print("\t\tCould not make directory/folder.")
 
@@ -346,6 +348,7 @@ def Pearl(a, b):
             Dir = b[1]
         except:
             Marg()
+            return
         
         if os.path.exists(Dir) == False:
             print("\t\tDirectory dosen't exist")

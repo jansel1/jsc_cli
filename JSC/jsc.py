@@ -26,7 +26,7 @@ CHARACTER = ""
 os.system(f"cd {os.getcwd()}")
 
 while True:
-    Input = input(f"\n\t{str(LINES)}. {CHARACTER} ")
+    Input = input(f"\n\tjsc $~ {CHARACTER} ")
     _Input = shlex.split(Input)
 
     il = Input.lower()
