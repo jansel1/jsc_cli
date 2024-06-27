@@ -15,6 +15,8 @@ from commands import CommandList
 from commands import LINES
 from commands import rmin, rmax
 
+import colorama.ansi
+
 # END LIBRARIES #
 
 
@@ -24,12 +26,24 @@ os.system('color 3f')
 CHARACTER = ""
 
 os.system(f"cd {os.getcwd()}")
+os.system('mode 75,45')
+
+def CUSTOM_COLOR(red, green, blue):
+    return f'\033[38;2;{red};{green};{blue}m'
+
+C_GREEN = CUSTOM_COLOR(17, 236, 52)
+C_PURPLE = CUSTOM_COLOR(128, 0, 128)
+C_RED = CUSTOM_COLOR(234, 43, 21)
+C_RESET = CUSTOM_COLOR(242, 242, 242)
+C_WHITE = CUSTOM_COLOR(255, 255, 255)
 
 while True:
-    Input = input(f"\nJSC @ {os.getcwd()} $~ {CHARACTER} ")
+    Input = input(f" {C_RESET}{os.getcwd()} {C_PURPLE}$~  {C_WHITE} ")
     _Input = shlex.split(Input)
 
     il = Input.lower()
+
+    print(colorama.Fore.RESET)
 
     # FLAGS #
     QUIT_AFTER_FLAG = False
@@ -50,11 +64,27 @@ while True:
         print("Qutting program")
         quit()
     
+    # Handles flags etc
     if ("-$q" in _Input): QUIT_AFTER_FLAG = True
     if ("-$l" in _Input): 
         LOOPCMD_FLAG = True
         LOOPCMD_FLAG_INDEX = _Input.index("-$l")
 
+    if (il == "lc"):
+        print(str(LINES))
+    elif (il == "listcmds"):
+        print(CommandList)
+    elif (_Input[0] == "xy"):
+        X = int(_Input[1])
+        Y = int(_Input[2])
+
+        confirm = input(" This command will clear all the text! Y/n to proceed:")
+
+        if (confirm.lower() == "y"):
+            os.system(f'mode {X},{Y}')
+        else:
+            pass
+        
     LINES += 1
 
     # This handles the /range function - used for <$Random>.
@@ -116,6 +146,6 @@ while True:
     # Tons of commands
 
 # Current bugs:
-    # 1. commands crashing if Marg
+    # 1. commands crashing if Marg (nvm, just enable try and except lol)
     # 2. some commands arent working (new ones)
     # 3. not a bug but i gotta change the default window size to a square

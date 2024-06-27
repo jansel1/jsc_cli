@@ -2,21 +2,17 @@
 
 import os, time
 import shlex
-import json
 import random
 import string
 import webbrowser
 import datetime
 import subprocess
 import socket
-import re
-import sys
 import shutil
-import socketserver
-import fnmatch
 import tkinter
 import win32com.client
 import pythoncom
+import colorama.ansi
 
 from threading import Thread
 from http.server import SimpleHTTPRequestHandler
@@ -24,6 +20,9 @@ from pathlib import Path
 
 # END LIBRARIES #
 
+BLUE = colorama.Fore.BLUE
+GREEN = colorama.Fore.GREEN
+RED = colorama.Fore.RED
 
 os.system('cls')
 os.system(f'title JanSel Command (JSC)')
@@ -354,26 +353,53 @@ def Pearl(a, b):
             Marg()
             return
         
-        if os.path.exists(Dir) == False:
-            print(" Directory dosen't exist")
-            return
-        
-        for root, _, files in os.walk(Dir):
-            for _f in files:
-                path = os.path.join(root, _f)
-                Size = os.path.getsize(path)
+        try:
+            if os.path.exists(Dir) == False:
+                print(" Directory dosen't exist")
+                return
+            
+            for root, dirs, files in os.walk(Dir):
+                for _f in files:
+                    path = os.path.join(root, _f)
+                    path = path.encode('utf-8', 'replace').decode('utf-8')
 
-                if Size == 0 and os.path.isfile(path):
-                    os.remove(path)
-                    RMVD += 1
+                    try:
+                        Size = os.path.getsize(path)
 
-                    print(f" Removed file {path}")
-                elif Size != 0:
-                    print(f" Could not delete file '{path}' because it is not empty.")
-        if RMVD == 0:
-            print(" Could not find files to remove.")
-        else:
-            print(f"\n Removed {RMVD} file(s)!")
+                        if os.access(path, os.R_OK) and os.access(path, os.W_OK):
+                            os.system(f"title JanSel Command (JSC)  REMOVED FILES: {RMVD}")
+
+                            if Size == 0 and os.path.isfile(path):
+                                os.remove(path)
+                                RMVD += 1
+
+                                print(f" Removed file {path}")
+                            elif Size != 0:
+                                print(f" Could not delete file '{path}' because it is not empty.")
+                    except Exception as e:
+                        print(f" Skipped over file {path} due to permission error <{e}>")
+
+                    for _d in dirs:
+                        dir_path = os.path.join(root, _d)
+                        dir_path = dir_path.encode('utf-8', 'replace').decode('utf-8')
+
+                        try:
+                            if not os.listdir(dir_path):
+                                os.rmdir(dir_path)
+                                RMVD += 1
+                                
+                                print(f"Removed directory {dir_path}")
+                        except (PermissionError, OSError) as e:
+                            print(f"Skipped over directory '{dir_path}' due to permission error <{e}>")
+
+            if RMVD == 0:
+                print(" Could not find files to remove.")
+            else:
+                print(f"\n Removed {RMVD} file(s)!")
+        except Exception as e:
+            print(f"ERROR! {e}")
+            print(f"Error is most probably a permission issue. The directory might be protected or locked.")
+
         return True
 
 def Dir(a, b):
@@ -550,13 +576,13 @@ def Explorer(a, b): # simple function, but ya' never know ;)
         return True
 
 def Open(a, b):
-    if b[0] == "$":
+    if a[0] == "$":
         try:
-            PROGRAM_TO_OPEN = b[1]
+            PROGRAM_TO_OPEN = str(a)[1:]
         except: Marg()
 
         try:
-            os.system(f"{PROGRAM_TO_OPEN}.exe")
+            os.system(f"{PROGRAM_TO_OPEN}")
         except: 
             print(" Could not open program, make sure the program name is correct.")
         
