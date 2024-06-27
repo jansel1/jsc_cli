@@ -16,6 +16,7 @@ import colorama.ansi
 import requests
 import pyperclip
 
+from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from threading import Thread
 from http.server import SimpleHTTPRequestHandler
@@ -695,6 +696,7 @@ def CloneURL(a, b):
 
 def WebStat(a, b):
     PING_FLAG = False
+    PING_ALOT_FLAG = False
 
     if (b[0] in ["webstat", "webs", "reqstat"]):
         status = "N/A"
@@ -702,6 +704,7 @@ def WebStat(a, b):
         URL = geturl(str(b[1]))
 
         if "-ping" in b: PING_FLAG = True
+        if "-pingfr" in b: PING_ALOT_FLAG = True
 
         try:
             res = requests.get(URL)
@@ -715,7 +718,15 @@ def WebStat(a, b):
             print(f"Status for {URL} is {res.status_code}")
 
         if (PING_FLAG):
-            os.system(f"ping {URL}")
+            os.system(f"ping -n 10 {urlparse(URL).netloc}")
+
+            print("\n")
+        elif (PING_ALOT_FLAG):
+            while True:
+                try:
+                    os.system(f"ping -t {urlparse(URL).netloc}")
+                except KeyboardInterrupt:
+                    break
 
         print(status)
 
