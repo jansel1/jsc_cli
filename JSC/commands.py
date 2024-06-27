@@ -13,7 +13,10 @@ import tkinter
 import win32com.client
 import pythoncom
 import colorama.ansi
+import requests
+import pyperclip
 
+from bs4 import BeautifulSoup
 from threading import Thread
 from http.server import SimpleHTTPRequestHandler
 from pathlib import Path
@@ -25,7 +28,6 @@ GREEN = colorama.Fore.GREEN
 RED = colorama.Fore.RED
 
 os.system('cls')
-os.system(f'title JanSel Command (JSC)')
 
 rmin = 0
 rmax = 100
@@ -53,6 +55,13 @@ def match_split(Table, Keyword):
 
 def DIS_V():
     print("  # JSC version: Alpha #")
+
+class Title:
+    def Custom(text):
+        os.system(f"title {text}")
+    
+    def Reset():
+        os.system(f"title JanSel Command (JSC)")
 
 ############# COMMANDS #############
 
@@ -185,19 +194,19 @@ def Stiff(a, b):
                     print(f" Changed {f1.name}'s data to '{f2.name}'")
                 except:
                     print("Could not transfer data")
+def geturl(url):
+    Link = url
+
+    if not str(url).startswith("https://"):
+        Link = f"https://{url}"
+
+    return Link
 
 def Url(a, b):
     www = str(a).startswith("www.")
 
     if b[0] in ["http", "url"] or www:
-        try:
-            Link = b[1]
-        except:
-            if not www:
-                Marg()
-
-        if www:
-            Link = a
+        Link = geturl(b[1])
 
         try:
             webbrowser.open(str(Link))
@@ -339,14 +348,15 @@ def C(a, b):
             return
         try:
             os.mkdir(Directory)
-            print(f" Made directory/folder: (CD) - {Directory}")
+            print(f" Made directory/folder: (CD) - {os.path.abspath(Directory)}")
         except:
             print(" Could not make directory/folder.")
         return True
 
 def Pearl(a, b):
     RMVD = 0
-    if b[0] in ["pearl", "prl", "cln", "clean"]:
+
+    if b[0] in ["pearl", "prl", "cln", "clean", "powerwash", "purge"]:
         try: 
             Dir = b[1]
         except:
@@ -367,17 +377,14 @@ def Pearl(a, b):
                         Size = os.path.getsize(path)
 
                         if os.access(path, os.R_OK) and os.access(path, os.W_OK):
-                            os.system(f"title JanSel Command (JSC)  REMOVED FILES: {RMVD}")
+                            Title.Custom(f"title JanSel Command (JSC)  REMOVED FILES: {RMVD}")
 
                             if Size == 0 and os.path.isfile(path):
                                 os.remove(path)
                                 RMVD += 1
 
-                                print(f" Removed file {path}")
-                            elif Size != 0:
-                                print(f" Could not delete file '{path}' because it is not empty.")
                     except Exception as e:
-                        print(f" Skipped over file {path} due to permission error <{e}>")
+                        pass
 
                     for _d in dirs:
                         dir_path = os.path.join(root, _d)
@@ -387,15 +394,13 @@ def Pearl(a, b):
                             if not os.listdir(dir_path):
                                 os.rmdir(dir_path)
                                 RMVD += 1
-                                
-                                print(f"Removed directory {dir_path}")
                         except (PermissionError, OSError) as e:
-                            print(f"Skipped over directory '{dir_path}' due to permission error <{e}>")
-
+                            pass
             if RMVD == 0:
                 print(" Could not find files to remove.")
             else:
                 print(f"\n Removed {RMVD} file(s)!")
+
         except Exception as e:
             print(f"ERROR! {e}")
             print(f"Error is most probably a permission issue. The directory might be protected or locked.")
@@ -652,6 +657,67 @@ def MkShortcut(a, b):
 
         return True
 
+def CloneURL(a, b):
+    if b[0] in ['wclone', 'corl', 'webclone']:
+        COPY_TO_CLIPBOARD_f = False
+
+        try:
+            URL = geturl(b[1])
+        except:
+            Marg()
+            return
+
+        if "-cc" in b != -1: COPY_TO_CLIPBOARD_f = True
+        
+        url = str(URL)
+
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            html_content = response.text
+            soup = BeautifulSoup(html_content, 'html.parser')
+
+            loc = None
+
+            if COPY_TO_CLIPBOARD_f == False:
+                with open(f"cloneurl-{time.time()}.html", "w", encoding="utf-8") as file:
+                    file.write(str(soup.prettify()))
+                    loc = os.path.abspath(file.name)
+            else:
+                pyperclip.copy(str(soup.prettify()))
+                loc = "clipboard"
+
+            print(f"Cloned {url} to {loc}")
+        else:
+            print(f"Failed to retrieve the website. Status code: {response.status_code}")
+
+        return True
+
+def WebStat(a, b):
+    PING_FLAG = False
+
+    if (b[0] in ["webstat", "webs", "reqstat"]):
+        status = "N/A"
+
+        URL = geturl(str(b[1]))
+
+        if "-ping" in b: PING_FLAG = True
+
+        try:
+            res = requests.get(URL)
+        except Exception as e:
+            print(f"`{URL}` does not exist or isn't online!")
+
+            return
+
+        if (res.status_code == 200): status = f"`{URL}` is online"
+        else:
+            print(f"Status for {URL} is {res.status_code}")
+
+        if (PING_FLAG):
+            os.system(f"ping {URL}")
+
+        print(status)
 
 ############# COMMANDS END #############
 
@@ -686,5 +752,7 @@ CommandList = [ # Once you make a new function, add it here!
     Open,
     ByteView,
     Window,
-    MkShortcut
+    MkShortcut,
+    CloneURL,
+    WebStat
 ]

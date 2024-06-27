@@ -16,6 +16,7 @@ from commands import LINES
 from commands import rmin, rmax
 
 import colorama.ansi
+from commands import Title
 
 # END LIBRARIES #
 
@@ -36,6 +37,8 @@ C_PURPLE = CUSTOM_COLOR(128, 0, 128)
 C_RED = CUSTOM_COLOR(234, 43, 21)
 C_RESET = CUSTOM_COLOR(242, 242, 242)
 C_WHITE = CUSTOM_COLOR(255, 255, 255)
+
+Title.Reset()
 
 while True:
     Input = input(f" {C_RESET}{os.getcwd()} {C_PURPLE}$~  {C_WHITE} ")
@@ -112,30 +115,35 @@ while True:
     elif _Input[0] in ["#"]:
         print(f"\t\tCurrent directory: '{os.getcwd()}'")
 
-    #try:
-    LAST_CMD = None
+    try:
+        LAST_CMD = None
 
-    for i in CommandList:
-        Cmd = i(Input, _Input)
+        for i in CommandList:
+            Cmd = i(Input, _Input)
 
-        if Cmd == "cls":
-            LINES = 1
-        
-        LAST_CMD = i
-        
-    if (QUIT_AFTER_FLAG == True): quit()
-    if (LOOPCMD_FLAG == True): 
-        try:
-            AMNT = _Input[LOOPCMD_FLAG_INDEX + 1]
-        except: 
+            if Cmd == "cls":
+                LINES = 1
+            
+            LAST_CMD = i
+            
+        if (QUIT_AFTER_FLAG == True): quit()
+        if (LOOPCMD_FLAG == True): 
+            try:
+                AMNT = _Input[LOOPCMD_FLAG_INDEX + 1]
+            except: 
+                Marg()
+            
+            for i in range(int(AMNT)):
+                LAST_CMD(Input, _Input)
+                print(LAST_CMD)
+
+    except Exception as e: 
+        if (isinstance(e, IndexError)):
             Marg()
-        
-        for i in range(int(AMNT)):
-            LAST_CMD(Input, _Input)
-            print(LAST_CMD)
+        else:
+            print(e)
 
-    #except: pass
-
+    Title.Reset()
 
 ############# END MAIN STUFF #############
 
@@ -146,6 +154,6 @@ while True:
     # Tons of commands
 
 # Current bugs:
-    # 1. commands crashing if Marg (nvm, just enable try and except lol)
-    # 2. some commands arent working (new ones)
-    # 3. not a bug but i gotta change the default window size to a square
+    # 1. some commands arent working (new ones)
+    # 2. gotta fix some other commands
+    # 3. print statements are 1 line under 
