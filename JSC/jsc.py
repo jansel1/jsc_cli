@@ -101,10 +101,10 @@ while True:
                 rmin = int(min)
                 rmax = int(max)
             
-                print("\t\tChanged random range sucessfully.")
+                print(" Changed random range sucessfully.")
 
             else:
-                print("\t\tMinimum number cannot be bigger than maximum.")
+                print(" Minimum number cannot be bigger than maximum.")
 
         except: 
             Marg()
@@ -113,7 +113,7 @@ while True:
 
     # This handles the command '#', used for listing the current direcotry.
     elif _Input[0] in ["#"]:
-        print(f"\t\tCurrent directory: '{os.getcwd()}'")
+        print(f" Current directory: '{os.getcwd()}'")
 
     try:
         LAST_CMD = None
@@ -123,6 +123,10 @@ while True:
 
             if Cmd == "cls":
                 LINES = 1
+            
+            if not Cmd == True:
+                print(f" Could not find command {_Input}, re-check spelling or make sure you added it to the `CommandList` array!")
+                break
             
             LAST_CMD = i
             

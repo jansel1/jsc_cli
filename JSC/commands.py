@@ -1,4 +1,4 @@
-# LIBRARIES! #
+# LIBRARIES!
 
 import os, time
 import shlex
@@ -75,7 +75,7 @@ def Return(Input, _Input):
 
         print(f"{_out.replace(_char2, str(random.randint(rmin, rmax)))} ")
 
-        return "$return"
+        return True
         
 def Clear(Input, _Input):
     if _Input[0] in ["cls", "clearscreen", "-"]:
@@ -84,8 +84,7 @@ def Clear(Input, _Input):
         time.sleep(0.1)
         os.system('cls')
 
-        DIS_V()
-        return "cls"
+        return True
     
 def LoopReturn(Input, _Input):
     if _Input[0] == "lp":
@@ -108,7 +107,7 @@ def LoopReturn(Input, _Input):
 
             print(e_s)
 
-        return "$lreturn"
+        return True
 
 def ReadFile(Input, _Input):
     try:
@@ -127,9 +126,10 @@ def ReadFile(Input, _Input):
                 
                 print(file.read())
 
-            return "$readf" 
+            return True 
     except:
         print(" Missing file location arguement or could not find file")
+        return True
 
 def Delta(Input, _Input):
     if _Input[0] in ["delta", "del"]:
@@ -148,7 +148,7 @@ def Delta(Input, _Input):
         except:
             print(" Could not remove directory/folder.")
 
-    return "delta"
+    return True
 
 _LETTERS_ = f"{string.ascii_letters}{string.digits}"
 
@@ -163,6 +163,7 @@ def Namef(Input, _Input):
             
             os.rename(FilePath, str(DesiredName))
             print(f" Renamed '{FilePath}' to '{DesiredName}'")
+            return True
 
 def Cf(Input, _Input):
     if _Input[0] == "cf":
@@ -174,6 +175,7 @@ def Cf(Input, _Input):
         with open(f"{FileName}", "x+") as file:
             print(f" Created file: {FileName}")
             pass
+        return True
 
 def Stiff(a, b):
     if b[0] in ["stf", "stiff", "td"]:
@@ -195,6 +197,8 @@ def Stiff(a, b):
                     print(f" Changed {f1.name}'s data to '{f2.name}'")
                 except:
                     print("Could not transfer data")
+        return True
+
 def geturl(url):
     Link = url
 
@@ -213,6 +217,7 @@ def Url(a, b):
             webbrowser.open(str(Link))
         except:
             print(" Could not open page.")
+        return True
 
 def Save(a, b):
     if b[0] in ["save", "sv"]:
@@ -241,6 +246,7 @@ def Save(a, b):
                 print(f" Made a save file for {FileToSave.name}")
         except:
             print("An error has occured and cannot create .sv (save) file.")
+        return True
 
 def Ip(a, b):
     dat_hn = f" {socket.gethostname()}"
@@ -264,7 +270,7 @@ def Ip(a, b):
         except: pass
         
         print(dat)
-
+        return True
 
 def Bomb(a, b):
     if b[0] == "bomb":
@@ -283,6 +289,7 @@ def Bomb(a, b):
                 print(f" Made file {f.name}: {i+1}")
 
         print(f" Sucessfully bomb'ed {Dir}")
+        return True
 
 def Reg(a, b):
     if b[0] == "reg":
@@ -292,6 +299,7 @@ def Reg(a, b):
             Marg()
 
         print(f"{os.popen(Command).read()}")
+        return True
 
 def Blank(a, b):
     if b[0] == "blk":
@@ -316,6 +324,7 @@ def Blank(a, b):
                     print(f" Blank'ed {path}!")
         except:
             print(f"Could not blank {Directory}")
+        return True
 
 def Corrupt(a, b):
     if b[0] == "cor":
@@ -338,7 +347,6 @@ def Corrupt(a, b):
         except:
             print("Could not corrupt file.")
         return True
-
 
 def C(a, b):
     if b[0] in ["c", "cff"]:
@@ -437,7 +445,6 @@ def Run(a, b):
             return True
         except:
             Marg()
-            return
 
 def SocketInfo(a, b):
     _h = False
@@ -729,6 +736,44 @@ def WebStat(a, b):
                     break
 
         print(status)
+        return True
+
+def FindFile(a, b):
+    C_DRIVE_FLAG = False
+    CWD_DIR_FLAG = False
+
+    if b[0] in ["syscan", "dscan"]:
+        path = os.path.abspath(str(b[1]))
+        name = str(b[2])
+        
+        if "-c" in b: C_DRIVE_FLAG = True
+        if "#" in b: CWD_DIR_FLAG = True
+
+        if C_DRIVE_FLAG: 
+            path = "C:/"
+            name = str(b[1])
+        
+        if CWD_DIR_FLAG:
+            path = "./"
+            name = str(b[1])
+
+        targets = []
+
+        #print(" This is a painfully slow process!")
+
+        try:
+            for root, dirs, files in os.walk(path):
+                if name in files or name in dirs:
+                    targets.append(str(os.path.abspath(os.path.join(root, name))))
+        except KeyboardInterrupt:
+            return
+
+        if len(targets) == 0:
+            print(f" Found no files matching '{name}'")
+            return
+        
+        print(targets)
+        return True
 
 ############# COMMANDS END #############
 
@@ -754,6 +799,7 @@ CommandList = [ # Once you make a new function, add it here!
     Run,
     SocketInfo,
     working,
+    hello,
     Hide,
     _Time,
     wifi,
@@ -765,5 +811,6 @@ CommandList = [ # Once you make a new function, add it here!
     Window,
     MkShortcut,
     CloneURL,
-    WebStat
+    WebStat,
+    FindFile
 ]
