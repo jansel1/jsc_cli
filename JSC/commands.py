@@ -45,7 +45,7 @@ LINES = 1
 CWD = "C:\\"   
 
 def Marg():
-    print("\t\tMissing arguements or an error has ocurred.")
+    print(" Missing arguements or an error has ocurred.")
 
 def match_split(Table, Keyword):
     for val in Table:
@@ -53,7 +53,7 @@ def match_split(Table, Keyword):
             return Table.index(val, 0, len(Table))
 
 def DIS_V():
-    print("\t\t\t\t# JSC version: Alpha #")
+    print("  # JSC version: Alpha #")
 
 ############# COMMANDS #############
 
@@ -62,7 +62,7 @@ def Return(Input, _Input):
         _char2 = "<$Random>"
 
         Input.replace('"', "'")
-        _out = f"\t\t{_Input[1]}"
+        _out = f" {_Input[1]}"
 
         print(f"{_out.replace(_char2, str(random.randint(rmin, rmax)))} ")
 
@@ -70,7 +70,7 @@ def Return(Input, _Input):
         
 def Clear(Input, _Input):
     if _Input[0] in ["cls", "clearscreen", "-"]:
-        print("\t\tClearing...")
+        print(" Clearing...")
 
         time.sleep(0.1)
         os.system('cls')
@@ -80,7 +80,7 @@ def Clear(Input, _Input):
     
 def LoopReturn(Input, _Input):
     if _Input[0] == "lp":
-        _out = f"\t\t{_Input[1]}"
+        _out = f" {_Input[1]}"
 
         _char1 = "<$Amount>"
         _char2 = "<$Random>"
@@ -111,23 +111,23 @@ def ReadFile(Input, _Input):
 
             
             if os.path.exists(FilePath) == False:
-                print("\t\tDirectory dosen't exist")
+                print(" Directory dosen't exist")
                 return
             with open(FilePath, 'r+') as file:
-                print(f"\t\t{file.name}\n")
+                print(f" {file.name}\n")
                 
                 print(file.read())
 
             return "$readf" 
     except:
-        print("\t\tMissing file location arguement or could not find file")
+        print(" Missing file location arguement or could not find file")
 
 def Delta(Input, _Input):
     if _Input[0] in ["delta", "del"]:
         FilePath = _Input[1]
 
         if os.path.exists(FilePath) == False:
-            print("\t\tDirectory dosen't exist")
+            print(" Directory dosen't exist")
             return
         try:
             if os.path.isfile(FilePath):
@@ -135,9 +135,9 @@ def Delta(Input, _Input):
             elif os.path.isdir(FilePath):
                 shutil.rmtree(FilePath)
             
-            print(f"\t\tRemoved file/folder '{FilePath}' sucessfully")
+            print(f" Removed file/folder '{FilePath}' sucessfully")
         except:
-            print("\t\tCould not remove directory/folder.")
+            print(" Could not remove directory/folder.")
 
     return "delta"
 
@@ -149,11 +149,11 @@ def Namef(Input, _Input):
             DesiredName = str(_Input[2])
 
             if os.path.exists(FilePath) == False:
-                print("\t\tDirectory dosen't exist")
+                print(" Directory dosen't exist")
                 return
             
             os.rename(FilePath, str(DesiredName))
-            print(f"\t\tRenamed '{FilePath}' to '{DesiredName}'")
+            print(f" Renamed '{FilePath}' to '{DesiredName}'")
 
 def Cf(Input, _Input):
     if _Input[0] == "cf":
@@ -163,7 +163,7 @@ def Cf(Input, _Input):
         Contents = None
 
         with open(f"{FileName}", "x+") as file:
-            print(f"\t\tCreated file: {FileName}")
+            print(f" Created file: {FileName}")
             pass
 
 def Stiff(a, b):
@@ -175,7 +175,7 @@ def Stiff(a, b):
             Marg()
     
         if os.path.exists(File_To_GetData) == False or os.path.exists(File_To_TransferTo) == False:
-            print("\t\tDirectory dosen't exist")
+            print(" Directory dosen't exist")
             return
 
         with open(File_To_GetData, "r+") as f1:
@@ -183,7 +183,7 @@ def Stiff(a, b):
                 Contents = str(f1.read())
                 try:
                     f2.write(Contents)
-                    print(f"\t\tChanged {f1.name}'s data to '{f2.name}'")
+                    print(f" Changed {f1.name}'s data to '{f2.name}'")
                 except:
                     print("Could not transfer data")
 
@@ -203,7 +203,7 @@ def Url(a, b):
         try:
             webbrowser.open(str(Link))
         except:
-            print("\t\tCould not open page.")
+            print(" Could not open page.")
 
 def Save(a, b):
     if b[0] in ["save", "sv"]:
@@ -213,7 +213,7 @@ def Save(a, b):
             Marg()
         
         if os.path.exists(FileToSave) == False:
-            print("\t\tDirectory dosen't exist")
+            print(" Directory dosen't exist")
             return
         
         try:
@@ -229,13 +229,13 @@ def Save(a, b):
 
                 subprocess.check_call(["attrib", "+H", FName])
 
-                print(f"\t\tMade a save file for {FileToSave.name}")
+                print(f" Made a save file for {FileToSave.name}")
         except:
             print("An error has occured and cannot create .sv (save) file.")
 
 def Ip(a, b):
-    dat_hn = f"\t\t{socket.gethostname()}"
-    dat_ip = f"\t\t{socket.gethostbyname(socket.gethostname())}"
+    dat_hn = f" {socket.gethostname()}"
+    dat_ip = f" {socket.gethostbyname(socket.gethostname())}"
 
     dat = f"{dat_hn}\n{dat_ip}"
 
@@ -251,7 +251,7 @@ def Ip(a, b):
                 with open(f"{Dir}", "x+") as file:
                     file.write(dat.replace("\t", ""))
 
-                print(f"\t\tSaved your IP adress to '{Dir}'.\n")
+                print(f" Saved your IP adress to '{Dir}'.\n")
         except: pass
         
         print(dat)
@@ -263,7 +263,7 @@ def Bomb(a, b):
         Amount = int(b[2])
         
         if os.path.exists(Dir) == False:
-            print("\t\tDirectory dosen't exist")
+            print(" Directory dosen't exist")
             return
         
         for i in range(Amount):
@@ -271,9 +271,9 @@ def Bomb(a, b):
 
                 for z in range(1024*100):
                     f.write(" ")
-                print(f"\t\tMade file {f.name}: {i+1}")
+                print(f" Made file {f.name}: {i+1}")
 
-        print(f"\t\tSucessfully bomb'ed {Dir}")
+        print(f" Sucessfully bomb'ed {Dir}")
 
 def Reg(a, b):
     if b[0] == "reg":
@@ -293,7 +293,7 @@ def Blank(a, b):
 
         
         if os.path.exists(Directory) == False:
-            print("\t\tDirectory dosen't exist")
+            print(" Directory dosen't exist")
             return
         
         try:
@@ -304,7 +304,7 @@ def Blank(a, b):
                     with open(path, "w+") as f:
                         f.write("") # lmao
                     
-                    print(f"\t\tBlank'ed {path}!")
+                    print(f" Blank'ed {path}!")
         except:
             print(f"Could not blank {Directory}")
 
@@ -317,7 +317,7 @@ def Corrupt(a, b):
             return
 
         if os.path.exists(File) == False:
-            print("\t\tDirectory dosen't exist")
+            print(" Directory dosen't exist")
             return
         
         try:
@@ -340,9 +340,9 @@ def C(a, b):
             return
         try:
             os.mkdir(Directory)
-            print(f"\t\tMade directory/folder: (CD) - {Directory}")
+            print(f" Made directory/folder: (CD) - {Directory}")
         except:
-            print("\t\tCould not make directory/folder.")
+            print(" Could not make directory/folder.")
         return True
 
 def Pearl(a, b):
@@ -355,7 +355,7 @@ def Pearl(a, b):
             return
         
         if os.path.exists(Dir) == False:
-            print("\t\tDirectory dosen't exist")
+            print(" Directory dosen't exist")
             return
         
         for root, _, files in os.walk(Dir):
@@ -367,13 +367,13 @@ def Pearl(a, b):
                     os.remove(path)
                     RMVD += 1
 
-                    print(f"\t\tRemoved file {path}")
+                    print(f" Removed file {path}")
                 elif Size != 0:
-                    print(f"\t\tCould not delete file '{path}' because it is not empty.")
+                    print(f" Could not delete file '{path}' because it is not empty.")
         if RMVD == 0:
-            print("\t\tCould not find files to remove.")
+            print(" Could not find files to remove.")
         else:
-            print(f"\n\t\tRemoved {RMVD} file(s)!")
+            print(f"\n Removed {RMVD} file(s)!")
         return True
 
 def Dir(a, b):
@@ -385,7 +385,7 @@ def Dir(a, b):
                 Desired = os.path.dirname(os.path.realpath(__file__))
 
             os.chdir(Desired)
-            print(f"\t\t Changed working directory to '{Desired}'")
+            print(f"  Changed working directory to '{Desired}'")
             return True
         except: Marg()
 
@@ -422,11 +422,11 @@ def SocketInfo(a, b):
             try:
                 try:
                     hn = socket.gethostbyaddr(Socket_HN)
-                except: print("\t\tCould not get IP.")
+                except: print(" Could not get IP.")
 
-                print(f"\t\tHost name: {hn}")
+                print(f" Host name: {hn}")
             except:
-                print("\t\tCould not resolve host name.")
+                print(" Could not resolve host name.")
 
             _h = True
 
@@ -435,11 +435,11 @@ def SocketInfo(a, b):
 
             try:
                 ip = socket.gethostbyname(Socket_HN)
-            except: print("\t\tCould not get host.")
+            except: print(" Could not get host.")
 
-            print(f"\t\tIP: {ip}")
+            print(f" IP: {ip}")
             return True
-        except: print("\t\tCould not resolve IP.")
+        except: print(" Could not resolve IP.")
 
 def working(a, b):
     if b[0] in ["working", "test"]:
@@ -474,14 +474,14 @@ def Hide(a, b):
                         return
 
                     attr(FName, "-H")
-                    print(f"\t\tMade {FName.name} visible. (Changes might take some seconds to show)")
+                    print(f" Made {FName.name} visible. (Changes might take some seconds to show)")
 
                     return
             except: pass
 
             attr(FName, "+H")
             
-            print(f"\t\tMade {FName.name} hidden. (Changes might take some seconds to show)")
+            print(f" Made {FName.name} hidden. (Changes might take some seconds to show)")
             return True
         except:
             Marg()
@@ -489,7 +489,7 @@ def Hide(a, b):
 
 def _Time(a, b):
     if b[0] in ["time", "t"]:
-        print(f"\t\t{datetime.datetime.now()}")
+        print(f" {datetime.datetime.now()}")
         return True
 
 def wifi(a, b):
@@ -500,7 +500,7 @@ def wifi(a, b):
 def jsc(a, b):
     if b[0] == "jsc":
         webbrowser.open('jansel.pages.dev')
-        print("\t\tThanks for using JSC!")
+        print(" Thanks for using JSC!")
         return True
 
 PRINTABLE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
@@ -519,11 +519,11 @@ def Random(a, b):
             if not MIN_NUMBER > MAX_NUMBER:
                 RESULT = random.randint(MIN_NUMBER, MAX_NUMBER)
 
-                print(f"\t\t{RESULT}")
+                print(f" {RESULT}")
             else:
-                print(f"\t\tCannot have the minimum number bigger than the maximum. Did you mean: randint {MAX_NUMBER} {MIN_NUMBER} ?")
+                print(f" Cannot have the minimum number bigger than the maximum. Did you mean: randint {MAX_NUMBER} {MIN_NUMBER} ?")
         except:
-            print("\t\tCould not get random number.")
+            print(" Could not get random number.")
             return True
         return True
     elif b[0] == "randstr":
@@ -537,11 +537,11 @@ def Random(a, b):
         if CanUseLetters:
             RESULT = random.choice(list(LETTERS))
 
-            print(f"\t\t{RESULT}")
+            print(f" {RESULT}")
         else:
             RESULT = random.choice(PRINTABLE)
 
-            print(f"\t\t{RESULT}")
+            print(f" {RESULT}")
         return True
 
 def Explorer(a, b): # simple function, but ya' never know ;)
@@ -558,7 +558,7 @@ def Open(a, b):
         try:
             os.system(f"{PROGRAM_TO_OPEN}.exe")
         except: 
-            print("\t\tCould not open program, make sure the program name is correct.")
+            print(" Could not open program, make sure the program name is correct.")
         
         return True
 
@@ -575,7 +575,7 @@ def ByteView(a, b):
             with open(FILE_TO_READ, 'rb') as file:
                 print(file.read())
         except:
-            print("\t\tCould not read the byte data for file.")
+            print(" Could not read the byte data for file.")
 
         return True
     
@@ -599,7 +599,7 @@ def Window(a, b):
             Marg()
             return
         
-        print("\t\tOpening window...")
+        print(" Opening window...")
         tk(title=title, size=size, text=text)
 
         return True
@@ -622,7 +622,7 @@ def MkShortcut(a, b):
 
         shortcut.save()
 
-        print(f"\t\tMade shortcut ({os.path.realpath(Destination)})")
+        print(f" Made shortcut ({os.path.realpath(Destination)})")
 
         return True
 
