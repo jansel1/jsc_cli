@@ -1,12 +1,14 @@
 
-# JSC Alpha v0.0.0 
+# JSC Alpha v1.0.0 
 JSC is still in development, but you can install the Alpha version! Install it at http://jansel.pages.dev
-
+(The version listed above is the current version - I might forget to update the version on the website)
 
 # What is JSC?
 
 
-JSC is a open-source Python CLI that helps the user do various tasks such as delete files, make files, re-name them, etc.
+JSC is a open-source Python CLI that helps with important tasks.
+Most commands I made are kinda random, but there sure it a ton.
+
 
 Thanks for installing!
 

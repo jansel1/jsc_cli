@@ -280,7 +280,6 @@ def Reg(a, b):
         except:
             Marg()
 
-        print("\t\tResult:\n\n")
         print(f"{os.popen(Command).read()}")
 
 def Blank(a, b):
@@ -438,7 +437,7 @@ def working(a, b):
             print(f"TESTING.... {i}")
             print(f"WARMING UP... {random.choice(_LETTERS_)}")
 def hello(full, split):
-    if split == "/hi":
+    if split[0] == "/hi":
       print("Halloes!")
       
 def Hide(a, b):
@@ -578,6 +577,17 @@ def Window(a, b):
         
         print("\t\tOpening window...")
         tk(title=title, size=size, text=text)
+
+def MkShortcut(a, b):
+    if b[0] in ["ms", "mks", "short", "portal", "witch"]:
+        try:
+            Location = b[1]
+            Destination = b[2]
+            Name = b[3]
+        except:
+            Marg()
+            return
+        
 
 ############# COMMANDS END #############
 
