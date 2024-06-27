@@ -15,6 +15,8 @@ import shutil
 import socketserver
 import fnmatch
 import tkinter
+import win32com.client
+import pythoncom
 
 from threading import Thread
 from http.server import SimpleHTTPRequestHandler
@@ -326,6 +328,8 @@ def Corrupt(a, b):
             print(f"Corrupted '{File}'")
         except:
             print("Could not corrupt file.")
+        return True
+
 
 def C(a, b):
     if b[0] in ["c", "cff"]:
@@ -339,6 +343,7 @@ def C(a, b):
             print(f"\t\tMade directory/folder: (CD) - {Directory}")
         except:
             print("\t\tCould not make directory/folder.")
+        return True
 
 def Pearl(a, b):
     RMVD = 0
@@ -369,6 +374,7 @@ def Pearl(a, b):
             print("\t\tCould not find files to remove.")
         else:
             print(f"\n\t\tRemoved {RMVD} file(s)!")
+        return True
 
 def Dir(a, b):
     if b[0] in ["dir", "cd"]:
@@ -380,6 +386,7 @@ def Dir(a, b):
 
             os.chdir(Desired)
             print(f"\t\t Changed working directory to '{Desired}'")
+            return True
         except: Marg()
 
 def Run(a, b):
@@ -387,6 +394,7 @@ def Run(a, b):
         try:
             FilePath = b[1]
             os.system(f"python {FilePath}")
+            return True
         except:
             Marg()
 
@@ -394,6 +402,7 @@ def Run(a, b):
         try:
             FilePath = b[1]
             os.system(f"{FilePath}")
+            return True
         except:
             Marg()
             return
@@ -429,6 +438,7 @@ def SocketInfo(a, b):
             except: print("\t\tCould not get host.")
 
             print(f"\t\tIP: {ip}")
+            return True
         except: print("\t\tCould not resolve IP.")
 
 def working(a, b):
@@ -436,9 +446,12 @@ def working(a, b):
         for i in range(random.randint(1200, 9000)):
             print(f"TESTING.... {i}")
             print(f"WARMING UP... {random.choice(_LETTERS_)}")
+        return True
+    
 def hello(full, split):
     if split[0] == "/hi":
       print("Halloes!")
+      return True
       
 def Hide(a, b):
     def attr(c, d):
@@ -469,6 +482,7 @@ def Hide(a, b):
             attr(FName, "+H")
             
             print(f"\t\tMade {FName.name} hidden. (Changes might take some seconds to show)")
+            return True
         except:
             Marg()
             return
@@ -476,15 +490,18 @@ def Hide(a, b):
 def _Time(a, b):
     if b[0] in ["time", "t"]:
         print(f"\t\t{datetime.datetime.now()}")
+        return True
 
 def wifi(a, b):
     if b[0] == "wif":
         print(str(subprocess.check_output("netsh wlan show profiles name=*")).replace("\\n", "\n").replace("\\r", "\r"))
+        return True
 
 def jsc(a, b):
     if b[0] == "jsc":
         webbrowser.open('jansel.pages.dev')
         print("\t\tThanks for using JSC!")
+        return True
 
 PRINTABLE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
 
@@ -507,7 +524,8 @@ def Random(a, b):
                 print(f"\t\tCannot have the minimum number bigger than the maximum. Did you mean: randint {MAX_NUMBER} {MIN_NUMBER} ?")
         except:
             print("\t\tCould not get random number.")
-
+            return True
+        return True
     elif b[0] == "randstr":
         CanUseLetters = True
 
@@ -524,10 +542,12 @@ def Random(a, b):
             RESULT = random.choice(PRINTABLE)
 
             print(f"\t\t{RESULT}")
+        return True
 
 def Explorer(a, b): # simple function, but ya' never know ;)
     if b[0] in ["explorer.exe", "explorer", "exp", "exp.exe"]:
         os.system("explorer.exe")
+        return True
 
 def Open(a, b):
     if b[0] == "$":
@@ -539,6 +559,8 @@ def Open(a, b):
             os.system(f"{PROGRAM_TO_OPEN}.exe")
         except: 
             print("\t\tCould not open program, make sure the program name is correct.")
+        
+        return True
 
 def ByteView(a, b):
     if b[0] == "readb":
@@ -555,6 +577,8 @@ def ByteView(a, b):
         except:
             print("\t\tCould not read the byte data for file.")
 
+        return True
+    
 def Window(a, b):
     if b[0] == "window":
         def tk(title="No title yet..", size="500x500", text="Hello"):
@@ -578,6 +602,8 @@ def Window(a, b):
         print("\t\tOpening window...")
         tk(title=title, size=size, text=text)
 
+        return True
+
 def MkShortcut(a, b):
     if b[0] in ["ms", "mks", "short", "portal", "witch"]:
         try:
@@ -588,6 +614,18 @@ def MkShortcut(a, b):
             Marg()
             return
         
+        shell = win32com.client.Dispatch("WScript.Shell")
+
+        shortcut = shell.CreateShortCut(f"{os.path.join(Destination, Name)}.lnk") # buggy for now it's WIP
+        shortcut.TargetPath = os.path.abspath(Location)
+        shortcut.WindowStyle = 1
+
+        shortcut.save()
+
+        print(f"\t\tMade shortcut ({os.path.realpath(Destination)})")
+
+        return True
+
 
 ############# COMMANDS END #############
 
@@ -621,5 +659,6 @@ CommandList = [ # Once you make a new function, add it here!
     Explorer,
     Open,
     ByteView,
-    Window
+    Window,
+    MkShortcut
 ]
