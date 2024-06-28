@@ -16,6 +16,7 @@ import colorama.ansi
 import requests
 import pyperclip
 
+from tabulate import tabulate
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from threading import Thread
@@ -30,8 +31,8 @@ RED = colorama.Fore.RED
 
 os.system('cls')
 
-rmin = 0
-rmax = 100
+global rmin
+global rmax
 
 def split(Value):
     lex = shlex.shlex(Value)
@@ -66,8 +67,22 @@ class Title:
 
 ############# COMMANDS #############
 
+def Range(a, b): # wip
+    if b[0] == "range":
+        min_ = b[1]
+        max_ = b[2]
+
+        if min_ < max_:
+            rmin = int(min)
+            rmax = int(max)
+            
+            print(" Changed random range sucessfully.")
+
+        else:
+            print(" Minimum number cannot be bigger than maximum.")
+
 def Return(Input, _Input):
-    if _Input[0] == "p":
+    if _Input[0] == "cout":
         _char2 = "<$Random>"
 
         Input.replace('"', "'")
@@ -87,7 +102,7 @@ def Clear(Input, _Input):
         return True
     
 def LoopReturn(Input, _Input):
-    if _Input[0] == "lp":
+    if _Input[0] == "lcout":
         _out = f" {_Input[1]}"
 
         _char1 = "<$Amount>"
@@ -775,6 +790,48 @@ def FindFile(a, b):
         print(targets)
         return True
 
+CURRENT_GLOBAL_VARIABLES = [
+    ("test", 250)
+]
+
+def VariableDef(a, b):
+    if (b[0] == "%"):
+        VARIABLE_NAME = b[1]
+        VARIABLE_VALUE = b[2]
+
+        if any(VARIABLE_NAME == item[0] for item in CURRENT_GLOBAL_VARIABLES):
+            print(" Variable already exists!")
+            return
+        else:
+            CURRENT_GLOBAL_VARIABLES.append([VARIABLE_NAME, VARIABLE_VALUE])
+            print(" Made variable sucessfully.")
+        return True
+
+def SpewVariables(a, b):
+    if (b[0] in ["globals", "vlist"]):
+        print(CURRENT_GLOBAL_VARIABLES)
+        
+        return True
+
+def ListMk(a, b):
+    if (b[0] in ["listmk", "mklist"]):
+        head = []
+
+        if ("-h" in b):
+            header_index = int(list(b).index("-h"))
+
+            head.append(b[header_index + 1])
+            head.append(b[header_index + 2])
+
+        data = b[1:header_index]
+        print(data)
+        try:
+            data = list(data)
+        except:
+            print(" Formatting error when making list!")
+        
+        print(tabulate(data, headers=head, tablefmt="grid"))
+
 ############# COMMANDS END #############
 
 CommandList = [ # Once you make a new function, add it here!
@@ -812,5 +869,9 @@ CommandList = [ # Once you make a new function, add it here!
     MkShortcut,
     CloneURL,
     WebStat,
-    FindFile
+    FindFile,
+    VariableDef,
+    SpewVariables,
+    Range,
+    ListMk
 ]

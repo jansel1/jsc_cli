@@ -13,7 +13,7 @@ import commands
 from commands import Marg
 from commands import CommandList
 from commands import LINES
-from commands import rmin, rmax
+#from commands import rmin, rmax
 
 import colorama.ansi
 from commands import Title
@@ -40,7 +40,12 @@ C_WHITE = CUSTOM_COLOR(255, 255, 255)
 
 Title.Reset()
 
+min_ = 0
+max_ = 100
+
 while True:
+    global_vars = commands.CURRENT_GLOBAL_VARIABLES
+
     Input = input(f" {C_RESET}{os.getcwd()} {C_PURPLE}$~  {C_WHITE} ")
     _Input = shlex.split(Input)
 
@@ -61,7 +66,7 @@ while True:
 
         quit()
 
-    il.replace("<$Random>", str(random.randint(rmin, rmax)))
+    #il.replace("<$Random>", str(random.randint(rmin, rmax)))
 
     if il in ["q", "quit", "bye", "!!", "close"]:
         print("Qutting program")
@@ -90,29 +95,11 @@ while True:
         
     LINES += 1
 
-    # This handles the /range function - used for <$Random>.
-
-    if _Input[0] == "/range":
-        try:
-            min = _Input[1]
-            max = _Input[2]
-
-            if min < max:
-                rmin = int(min)
-                rmax = int(max)
-            
-                print(" Changed random range sucessfully.")
-
-            else:
-                print(" Minimum number cannot be bigger than maximum.")
-
-        except: 
-            Marg()
-
     ###################################
 
     # This handles the command '#', used for listing the current direcotry.
-    elif _Input[0] in ["#"]:
+
+    if _Input[0] in ["#"]:
         print(f" Current directory: '{os.getcwd()}'")
 
     try:
