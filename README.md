@@ -19,6 +19,10 @@ Thanks for installing!
 http://jansel.pages.dev/docs/
 (When visiting our website, dont add "www." infront of it. It will not work.)
 
+# DISCLAIMER!
+Most Windows devices will flag all of our binary releases as viruses! This is due to the PyInstaller/AutoPyToExe executable not being signed. Please do not worry, and if you still don't trust it, feel free to recompile it using PyInstaller/AutoPyToExe!
+
+
 # Debugging
 
 If you can't install JSC through the website, here are some ways to fix this:
@@ -26,3 +30,9 @@ If you can't install JSC through the website, here are some ways to fix this:
     * Re-open your browser
     * Refresh page
     * Install it from GitHub (github.com/jansel1/jsc_cli/)
+
+JSC not working/crashing
+      * If ran using Python, make sure all libraries are installed (to install them, use our Library Installer on the release page or manually install them.
+      * Make sure you are using Windows 10
+      * Let us know if it still wont work, 8/10 this is our issue.
+      
