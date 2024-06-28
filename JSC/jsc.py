@@ -124,9 +124,9 @@ while True:
             if Cmd == "cls":
                 LINES = 1
             
-            if not Cmd == True:
-                print(f" Could not find command {_Input}, re-check spelling or make sure you added it to the `CommandList` array!")
-                break
+            #if not Cmd == True:
+                #print(f" Could not find command {_Input}, re-check spelling or make sure you added it to the `CommandList` array!")
+                #break # buggy shit
             
             LAST_CMD = i
             
