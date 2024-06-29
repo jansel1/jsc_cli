@@ -91,8 +91,6 @@ while True:
 
         if (il == "lc"):
             print(str(LINES))
-        elif (il == "listcmds"):
-            print(CommandList)
         elif (_Input[0] == "xy"):
             X = int(_Input[1])
             Y = int(_Input[2])
@@ -103,6 +101,8 @@ while True:
                 os.system(f'mode {X},{Y}')
             else:
                 pass
+        elif (_Input[0] == "whoami"):
+            print(f" {os.getlogin()} at {os.path.normpath(os.path.expanduser('~/'))}")
             
         LINES += 1
 
@@ -112,7 +112,6 @@ while True:
 
         if _Input[0] in ["#"]:
             print(f" Current directory: '{os.getcwd()}'")
-
         try:
             LAST_CMD = None
 
