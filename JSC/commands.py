@@ -51,7 +51,7 @@ CWD = "C:\\"
 DIRECTORY_HISTORY = [os.getcwd()]
 
 def Marg():
-    print(" Missing arguements or an error has ocurred.")
+    print(" Index error! Missing arguements or an internal error has ocurred.")
 
 def match_split(Table, Keyword):
     for val in Table:
@@ -773,7 +773,7 @@ CURRENT_GLOBAL_VARIABLES = [ # Comes preloaded with variables, such as Desktop l
     ["desktop", str(os.path.normpath(os.path.expanduser("~/Desktop"))).replace("\\", "/")],
     ["temp", str(tempfile.gettempdir()).replace("\\", "/")],
     ["printable", PRINTABLE],
-    ["user", str(os.path.normpath(os.path.expanduser("~/"))).replace("\\", "/")]
+    ["user", str(os.path.normpath(os.path.expanduser("~/"))).replace("\\", "/")],
 ]
 
 def VariableDef(a, b):                                  # gotta work on this shit
@@ -791,7 +791,9 @@ def VariableDef(a, b):                                  # gotta work on this shi
 
 def SpewVariables(a, b):
     if (b[0] in ["globals", "vlist"]):
-        print(CURRENT_GLOBAL_VARIABLES)
+        
+        for var in CURRENT_GLOBAL_VARIABLES:
+            print(f"{var[0]} = {var[1]}\n")
         
         return True
 
