@@ -16,7 +16,7 @@ import pyperclip
 import psutil
 import platform
 import sys
-import ctypes
+import tempfile
 
 from tabulate import tabulate
 from urllib.parse import urlparse
@@ -48,6 +48,7 @@ def split(Value):
 LINES = 1
 
 CWD = "C:\\"   
+DIRECTORY_HISTORY = [os.getcwd()]
 
 def Marg():
     print(" Missing arguements or an error has ocurred.")
@@ -437,7 +438,10 @@ def Dir(a, b):
                 Desired = os.path.dirname(os.path.realpath(__file__))
 
             os.chdir(Desired)
-            print(f"  Changed working directory to '{Desired}'")
+            print(f" Changed working directory to '{Desired}'")
+
+            DIRECTORY_HISTORY.append(Desired)
+
             return True
         except: Marg()
 
@@ -762,8 +766,14 @@ def FindFile(a, b):
         print(targets)
         return True
 
-CURRENT_GLOBAL_VARIABLES = [
-    ["emptyValue", 10]
+D_INDEX = len(DIRECTORY_HISTORY)
+
+CURRENT_GLOBAL_VARIABLES = [ # Comes preloaded with variables, such as Desktop location, etc
+    ["cwd", str(os.getcwd()).replace("\\", "/")],
+    ["desktop", str(os.path.normpath(os.path.expanduser("~/Desktop"))).replace("\\", "/")],
+    ["temp", str(tempfile.gettempdir()).replace("\\", "/")],
+    ["printable", PRINTABLE],
+    ["user", str(os.path.normpath(os.path.expanduser("~/"))).replace("\\", "/")]
 ]
 
 def VariableDef(a, b):                                  # gotta work on this shit
@@ -897,6 +907,7 @@ def PythonUtils(a, b):
             print(f" Could not find argument '{b[1]}'")
 
         return True
+    
 def Path(a, b): # Shits suck
     if b[0] == "path":
         current_path = os.getenv('PATH', '')
