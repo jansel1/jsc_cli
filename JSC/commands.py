@@ -781,6 +781,12 @@ def VariableDef(a, b):                                  # gotta work on this shi
         VARIABLE_NAME = b[1]
         VARIABLE_VALUE = b[2]
 
+        if "-math" in b:
+            try:
+                VARIABLE_VALUE = eval(b[2])
+            except:
+                print(" Could not do math! Most likely a formatting error.")
+
         if any(VARIABLE_NAME == item[0] for item in CURRENT_GLOBAL_VARIABLES):
             print(" Variable already exists!")
             return

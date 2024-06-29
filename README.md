@@ -1,17 +1,22 @@
 
-# JSC Alpha v1.0.0 
+# JSC Pre-Release Beta Alpha v1.1.0 : 42 Commands (PBA1.1.0:42)
+
 JSC is still in development, but you can install the Alpha version! Install it at http://jansel.pages.dev or on GitHub (listed on the website or just go to http://github.com/jansel1/jsc_cli)
 
 (The version listed above is the current version - I might forget to update the version on the website)
 
 This is a fully open-source project, feel free to send pull request!
+As of PBA1.1, there are 42 commands, which won't be documented for a while. 
+
+**P.S the website isn't regularly maintained - it's prone to bugs. I wont be updating it for a while.**
 # What is JSC?
 
 
 JSC is a open-source Python CLI that helps with important tasks.
 Most commands I made are kinda random, but there sure is a ton.
 
-![A preview of the CLI (Taken on Alpha 1.0.0 Beta)](./etc/Other/img-preview-console-jsc.PNG)
+![A preview of the CLI (Taken on PBA 1.1.0 Beta)](./etc/Other/img-preview-console-jsc.PNG)
+(taken on PBA 1.1.0:42)
 
 Thanks for installing!
 
@@ -41,7 +46,8 @@ If you can't install JSC through the website, here are some ways to fix this:
     * Install it from GitHub (github.com/jansel1/jsc_cli/)
 
 JSC not working/crashing
-      * If ran using Python, make sure all libraries are installed (to install them, use our Library Installer on the release page or manually install them.
-      * Make sure you are using Windows 10
-      * Let us know if it still wont work, 8/10 this is our issue.
-      
+If ran using Python, make sure all libraries are installed (to install them, use our Library Installer on the release page or manually install them.
+
+Make sure you are using Windows 10, with ~25mb of free disk space.
+
+Let us know if it still wont work, 8/10 this is our issue.

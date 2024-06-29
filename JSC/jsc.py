@@ -53,9 +53,9 @@ while True:
             vname = sublist[0]
             vval = sublist[1]
 
-            CFG_VARIABLE_SYNTAX = f"%%{vname}"
+            CFG_VARIABLE_SYNTAX = f"%{vname}"
 
-            if f"%%{vname}" in Input:
+            if f"%{vname}" in Input:
                 Input = str(Input.replace(CFG_VARIABLE_SYNTAX, str(vval)))
 
         _Input = shlex.split(Input)
