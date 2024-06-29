@@ -9,9 +9,7 @@ import datetime
 import subprocess
 import socket
 import shutil
-import tkinter
 import win32com.client
-import pythoncom
 import colorama.ansi
 import requests
 import pyperclip
@@ -467,8 +465,8 @@ def SocketInfo(a, b):
             Marg()
             return
 
-        if b[1] == "-H":
-            Socket_HN = b[2]
+        if "-h" in b:
+            _h = True
             
             try:
                 try:
@@ -627,31 +625,6 @@ def ByteView(a, b):
                 print(file.read())
         except:
             print(" Could not read the byte data for file.")
-
-        return True
-    
-def Window(a, b):
-    if b[0] == "window":
-        def tk(title="No title yet..", size="500x500", text="Hello"):
-            tkroot = tkinter.Tk()
-
-            tkroot.title(title)
-            tkroot.geometry(size)
-
-            tkinter.Label(tkroot, text=text).pack()
-
-            tkinter.mainloop()
-
-        try:
-            title = b[1]
-            size = b[2]
-            text= b[3]
-        except:
-            Marg()
-            return
-        
-        print(" Opening window...")
-        tk(title=title, size=size, text=text)
 
         return True
 
@@ -900,6 +873,18 @@ def SysData(a, b):
         print(f"\tProcessor: {os_info.processor}")
         print(f"\tBoot Time: {psutil.boot_time()}")
 
+def PythonUtils(a, b):
+    if b[0] == "pyutil":
+        b[1]
+
+        if b[1] == "-exe": # This shit sucks ass
+            file_loc = os.path.abspath(b[2])
+
+            try:
+                os.system(f"pyinstaller --onefile {file_loc}")
+            except:
+                print("Could not convert to EXE, check file location and check if PyInstaller is installed.")
+
 ############# COMMANDS END #############
 
 CommandList = [ # Once you make a new function, add it here!
@@ -933,7 +918,6 @@ CommandList = [ # Once you make a new function, add it here!
     Explorer,
     Open,
     ByteView,
-    Window,
     MkShortcut,
     CloneURL,
     WebStat,
@@ -943,5 +927,6 @@ CommandList = [ # Once you make a new function, add it here!
     Range,
     ListMk,
     Process,
-    SysData
+    SysData,
+    PythonUtils
 ]

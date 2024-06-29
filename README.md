@@ -19,6 +19,12 @@ Thanks for installing!
 http://jansel.pages.dev/docs/
 (When visiting our website, dont add "www." infront of it. It will not work.)
 
+# More
+This is made using Python, and with that, sadly, the EXE size will be huge.
+I didn't make this in any other language due to complexity, which is crucial here. I made this in Python so writing commands would be easier, but that carries the Risk of it being slow and big. 
+
+However, from here on out, I won't release anymore standalone versions!
+
 # DISCLAIMER!
 Most Windows devices will flag all of our binary releases as viruses! This is due to the PyInstaller/AutoPyToExe executable not being signed. Please do not worry, and if you still don't trust it, feel free to recompile it using PyInstaller/AutoPyToExe!
 
