@@ -15,6 +15,8 @@ import pythoncom
 import colorama.ansi
 import requests
 import pyperclip
+import psutil
+import platform
 
 from tabulate import tabulate
 from urllib.parse import urlparse
@@ -88,7 +90,7 @@ def Return(Input, _Input):
         Input.replace('"', "'")
         _out = f" {_Input[1]}"
 
-        print(f"{_out.replace(_char2, str(random.randint(rmin, rmax)))} ")
+        print(f"{_out}") # print(f"{_out.replace(_char2, str(random.randint(rmin, rmax)))} ")
 
         return True
         
@@ -105,8 +107,8 @@ def LoopReturn(Input, _Input):
     if _Input[0] == "lcout":
         _out = f" {_Input[1]}"
 
-        _char1 = "<$Amount>"
-        _char2 = "<$Random>"
+        #_char1 = "<$Amount>"
+        #_char2 = "<$Random>"
 
         amt = 5
         try:
@@ -115,12 +117,7 @@ def LoopReturn(Input, _Input):
             pass
 
         for i in range(amt + 1):
-            e_s = (
-                _out.replace(_char2, f"{random.randint(rmin, rmax)}")
-                .replace(_char1, str(i))
-            )
-
-            print(e_s)
+            print(_out)
 
         return True
 
@@ -784,17 +781,17 @@ def FindFile(a, b):
             return
 
         if len(targets) == 0:
-            print(f" Found no files matching '{name}'")
+            print(f" Found no files matching '{name}' in {path}")
             return
         
         print(targets)
         return True
 
 CURRENT_GLOBAL_VARIABLES = [
-    ("test", 250)
+    ["emptyValue", 10]
 ]
 
-def VariableDef(a, b):
+def VariableDef(a, b):                                  # gotta work on this shit
     if (b[0] == "%"):
         VARIABLE_NAME = b[1]
         VARIABLE_VALUE = b[2]
@@ -813,7 +810,7 @@ def SpewVariables(a, b):
         
         return True
 
-def ListMk(a, b):
+def ListMk(a, b):                                       # to be fixed
     if (b[0] in ["listmk", "mklist"]):
         head = []
 
@@ -831,6 +828,77 @@ def ListMk(a, b):
             print(" Formatting error when making list!")
         
         print(tabulate(data, headers=head, tablefmt="grid"))
+
+        return True
+
+def Process(a, b):
+    if b[0] == "proc":
+        processName = str(b[1])
+        
+        if not processName.endswith(".exe") and not "-c" in b:
+            processName += ".exe"
+
+        found = False
+
+        for pid in psutil.process_iter(['pid', 'name', 'cpu_percent', 'exe']):
+            if pid.info["name"] == processName:
+                cpu_usage = "N/A"
+
+                proc = psutil.Process(pid.info['pid'])
+
+                if "-t" in b: # Terminate
+                    proc.terminate()
+                    print(" Ended process sucessfully.")
+
+                    break
+                if "-ft" in b: # Force Terminate
+                    proc.kill()
+                    print(" Terminated process sucessfully.")
+
+                    break
+
+                if not "-cud" in b: # Stands for CPU Usage Disabled
+                    print("Getting CPU usage...\n")
+                    cpu_usage = proc.cpu_percent(interval=5)
+
+                print(f" Process is currently running.\n Process abs. path: {pid.info['exe']}")
+                print(f" \nCPU Usage: {cpu_usage}%")
+                found = True
+
+
+                break
+
+        if not found:
+            print(" Could not find process")
+
+        return True
+    
+def SysData(a, b):
+    if b[0] in ["sysinfo", "sys"]:
+        ram = psutil.virtual_memory()
+
+        # Cpu
+        print(f" CPU:\n\t Logical CPU's: {psutil.cpu_count()}\n\t CPU Frequency: {psutil.cpu_freq().current}MHz\n\t CPU Usage: {psutil.cpu_percent()}%")
+
+        # Cpu Stats
+        print(f"\n CPU Stats\n\t CTX Switches: {psutil.cpu_stats().ctx_switches} \n\t Soft Interrupts: {psutil.cpu_stats().soft_interrupts}\n\t Syscalls: {psutil.cpu_stats().syscalls}")
+
+        # Ram
+        print(f" Ram:\n\tTotal RAM: {ram.total / (1024 * 1024 * 1024):.2f} GB")
+        print(f" \tAvailable RAM: {ram.available / (1024 * 1024 * 1024):.2f} GB")
+        print(f" \tUsed RAM: {ram.used / (1024 * 1024 * 1024):.2f} GB")
+        print(f" \tPercentage Used: {ram.percent}%")
+
+        # OS
+        os_info = platform.uname()
+
+        print(f"\nOperating System:\n\tSystem: {os_info.system}")
+        print(f"\tNode Name: {os_info.node}")
+        print(f"\tRelease: {os_info.release}")
+        print(f"\tVersion: {os_info.version}")
+        print(f"\tMachine: {os_info.machine}")
+        print(f"\tProcessor: {os_info.processor}")
+        print(f"\tBoot Time: {psutil.boot_time()}")
 
 ############# COMMANDS END #############
 
@@ -873,5 +941,7 @@ CommandList = [ # Once you make a new function, add it here!
     VariableDef,
     SpewVariables,
     Range,
-    ListMk
+    ListMk,
+    Process,
+    SysData
 ]

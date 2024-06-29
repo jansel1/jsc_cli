@@ -44,95 +44,109 @@ min_ = 0
 max_ = 100
 
 while True:
-    global_vars = commands.CURRENT_GLOBAL_VARIABLES
-
-    Input = input(f" {C_RESET}{os.getcwd()} {C_PURPLE}$~  {C_WHITE} ")
-    _Input = shlex.split(Input)
-
-    il = Input.lower()
-
-    print(colorama.Fore.RESET)
-
-    # FLAGS #
-    QUIT_AFTER_FLAG = False
-
-    LOOPCMD_FLAG = False
-    LOOPCMD_FLAG_INDEX = 0
-
-    # CORE #
-    if il in ["qr", "restart", "r", "upt", "latest", "reset"]:
-        os.chdir(os.path.dirname(os.path.realpath(__file__)))
-        os.system("python jsc.py")
-
-        quit()
-
-    #il.replace("<$Random>", str(random.randint(rmin, rmax)))
-
-    if il in ["q", "quit", "bye", "!!", "close"]:
-        print("Qutting program")
-        quit()
-    
-    # Handles flags etc
-    if ("-$q" in _Input): QUIT_AFTER_FLAG = True
-    if ("-$l" in _Input): 
-        LOOPCMD_FLAG = True
-        LOOPCMD_FLAG_INDEX = _Input.index("-$l")
-
-    if (il == "lc"):
-        print(str(LINES))
-    elif (il == "listcmds"):
-        print(CommandList)
-    elif (_Input[0] == "xy"):
-        X = int(_Input[1])
-        Y = int(_Input[2])
-
-        confirm = input(" This command will clear all the text! Y/n to proceed:")
-
-        if (confirm.lower() == "y"):
-            os.system(f'mode {X},{Y}')
-        else:
-            pass
-        
-    LINES += 1
-
-    ###################################
-
-    # This handles the command '#', used for listing the current direcotry.
-
-    if _Input[0] in ["#"]:
-        print(f" Current directory: '{os.getcwd()}'")
-
     try:
-        LAST_CMD = None
+        global_vars = commands.CURRENT_GLOBAL_VARIABLES
 
-        for i in CommandList:
-            Cmd = i(Input, _Input)
+        Input = input(f" {C_RESET}{os.getcwd()} {C_PURPLE}$~ {C_WHITE} ")
+        
+        for sublist in global_vars:     # Variable handling
+            vname = sublist[0]
+            vval = sublist[1]
 
-            if Cmd == "cls":
-                LINES = 1
+            CFG_VARIABLE_SYNTAX = f"%%{vname}"
+
+            if f"%%{vname}" in Input:
+                Input = str(Input.replace(CFG_VARIABLE_SYNTAX, str(vval)))
+
+        _Input = shlex.split(Input)
+
+        il = Input.lower()
+
+        print(colorama.Fore.RESET)
+
+        # FLAGS #
+        QUIT_AFTER_FLAG = False
+
+        LOOPCMD_FLAG = False
+        LOOPCMD_FLAG_INDEX = 0
+
+        # CORE #
+        if il in ["qr", "restart", "r", "upt", "latest", "reset"]:
+            os.chdir(os.path.dirname(os.path.realpath(__file__)))
+            os.system("python jsc.py")
+
+            quit()
+
+        #il.replace("<$Random>", str(random.randint(rmin, rmax)))
+
+        if il in ["q", "quit", "bye", "!!", "close"]:
+            print("Qutting program")
+            quit()
+        
+        # Handles flags etc
+        if ("-$q" in _Input): QUIT_AFTER_FLAG = True
+        if ("-$l" in _Input): 
+            LOOPCMD_FLAG = True
+            LOOPCMD_FLAG_INDEX = _Input.index("-$l")
+
+        if (il == "lc"):
+            print(str(LINES))
+        elif (il == "listcmds"):
+            print(CommandList)
+        elif (_Input[0] == "xy"):
+            X = int(_Input[1])
+            Y = int(_Input[2])
+
+            confirm = input(" This command will clear all the text! Y/n to proceed:")
+
+            if (confirm.lower() == "y"):
+                os.system(f'mode {X},{Y}')
+            else:
+                pass
             
-            #if not Cmd == True:
-                #print(f" Could not find command {_Input}, re-check spelling or make sure you added it to the `CommandList` array!")
-                #break # buggy shit
-            
-            LAST_CMD = i
-            
-        if (QUIT_AFTER_FLAG == True): quit()
-        if (LOOPCMD_FLAG == True): 
-            try:
-                AMNT = _Input[LOOPCMD_FLAG_INDEX + 1]
-            except: 
+        LINES += 1
+
+        ###################################
+
+        # This handles the command '#', used for listing the current direcotry.
+
+        if _Input[0] in ["#"]:
+            print(f" Current directory: '{os.getcwd()}'")
+
+        try:
+            LAST_CMD = None
+
+            for i in CommandList:
+                Cmd = i(Input, _Input)
+
+                #if Cmd == "cls":
+                    #LINES = 1
+                
+                #if not Cmd == True:
+                    #print(f" Could not find command {_Input}, re-check spelling or make sure you added it to the `CommandList` array!")
+                    #break # buggy shit
+                
+                LAST_CMD = i
+                
+            if (QUIT_AFTER_FLAG == True): quit()
+            if (LOOPCMD_FLAG == True): 
+                try:
+                    AMNT = _Input[LOOPCMD_FLAG_INDEX + 1]
+                except: 
+                    Marg()
+                
+                for i in range(int(AMNT)):
+                    LAST_CMD(Input, _Input)
+                    print(LAST_CMD)
+
+        except Exception as e: 
+            if (isinstance(e, IndexError)):
                 Marg()
-            
-            for i in range(int(AMNT)):
-                LAST_CMD(Input, _Input)
-                print(LAST_CMD)
+            else:
+                print(e)
 
-    except Exception as e: 
-        if (isinstance(e, IndexError)):
-            Marg()
-        else:
-            print(e)
+    except IndexError:
+        Marg()
 
     Title.Reset()
 
