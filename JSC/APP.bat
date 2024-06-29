@@ -1,3 +1,4 @@
+@echo off
 color 3f
 echo You ran this with APP.BAT!
 

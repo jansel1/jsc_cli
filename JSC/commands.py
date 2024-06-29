@@ -15,6 +15,8 @@ import requests
 import pyperclip
 import psutil
 import platform
+import sys
+import ctypes
 
 from tabulate import tabulate
 from urllib.parse import urlparse
@@ -875,15 +877,45 @@ def SysData(a, b):
 
 def PythonUtils(a, b):
     if b[0] == "pyutil":
-        b[1]
+        flags = ""
 
-        if b[1] == "-exe": # This shit sucks ass
-            file_loc = os.path.abspath(b[2])
+        b[1] # This is so if it's missing, it will return a marg
+
+        if "-dir" in b: flags += "--onedir"
+        if "-sta" in b: flags += "--onefile"
+
+        if "-exe" in b: # This shit sucks ass
+            file_loc = os.path.abspath(b[1])
 
             try:
-                os.system(f"pyinstaller --onefile {file_loc}")
+                os.system(f"pyinstaller {flags} {file_loc}")
             except:
-                print("Could not convert to EXE, check file location and check if PyInstaller is installed.")
+                print(" Could not convert to EXE, check file location and check if PyInstaller is installed.")
+        elif b[1] == "-version":
+            print(f" JSC is running Python {sys.version}")
+        else:
+            print(f" Could not find argument '{b[1]}'")
+
+        return True
+def Path(a, b): # Shits suck
+    if b[0] == "path":
+        current_path = os.getenv('PATH', '')
+
+        if "-list" in b:
+            path_list = current_path.split(os.pathsep)
+
+            for path in path_list:
+                print(path)
+
+            return
+        
+        if "-mk" in b:
+            new_path = os.path.abspath(b[1])
+            new_path_variable = f'{current_path}:{new_path}'
+
+            os.environ['PATH'] = new_path_variable
+
+            print(" Added directory to PATH.")
 
 ############# COMMANDS END #############
 
@@ -928,5 +960,6 @@ CommandList = [ # Once you make a new function, add it here!
     ListMk,
     Process,
     SysData,
-    PythonUtils
+    PythonUtils,
+    Path,
 ]
