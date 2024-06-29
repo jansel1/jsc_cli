@@ -1,0 +1,13 @@
+Switching from Standalone to (normal?) since Python and PyInstaller suck major ass. 100mb standalone is crazy.
+
+PBA 1.1.0
+
+If PBA 1.1.0 isn't working, please fucking tell me because I am fed of of this PyInstaller bullshit. I had to delete PySide and QT
+because this fucking PyInstaller puts it by default. I understand the current size of like 20mb, but 100mb is way too much.
+
+I have to find out which fucking library imports it. For now, I'm just working on the core and won't release another PBA in like a fucking year.
+Kthxbye
+
+PBA 1.2.0
+
+It will be big and cool. If I don't switch to C++ of C before it releases, I am a cuck

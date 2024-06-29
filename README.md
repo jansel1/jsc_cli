@@ -25,6 +25,9 @@ I didn't make this in any other language due to complexity, which is crucial her
 
 However, from here on out, I won't release anymore standalone versions!
 
+Also, PBA stands for "Prerelease Beta Alpha", aka should not be used lol.
+Also, I won't bother to update the release page on the github for a while.
+
 # DISCLAIMER!
 Most Windows devices will flag all of our binary releases as viruses! This is due to the PyInstaller/AutoPyToExe executable not being signed. Please do not worry, and if you still don't trust it, feel free to recompile it using PyInstaller/AutoPyToExe!
 
