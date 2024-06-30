@@ -18,6 +18,7 @@ import platform
 import sys
 import tempfile
 
+from rich.console import Console
 from tabulate import tabulate
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
@@ -479,7 +480,7 @@ def SocketInfo(a, b):
                     hn = socket.gethostbyaddr(Socket_HN)
                 except: print(" Could not get IP.")
 
-                print(f" Host name: {hn}")
+                print(f" Host name: {hn[0]}")
             except:
                 print(" Could not resolve host name.")
 
@@ -824,17 +825,87 @@ def ListMk(a, b):                                       # to be fixed
 
         return True
 
+LONG_PRINT_LOCATION = fr"{tempfile.gettempdir()}\JSC"
+
+def longprint(text):
+    f = None
+
+    with open(fr"{LONG_PRINT_LOCATION}TemporaryFile-{time.time()}-{random.randint(1,100)}.txt", 'w') as f:
+        f.write(text)
+    
+    webbrowser.open(f.name)
+
+def NameDelta(a, b):
+    IF_FIND_FLAG = False
+
+    if b[0] == "deltn":
+        if "-find" in b: IF_FIND_FLAG == True
+
+        LOCATION = b[1]
+        NAME = b[2]
+
+        for root, dirs, files in os.walk(LOCATION):
+            for _f in files:
+                _f_path = os.path.join(root, _f)
+                
+                if not IF_FIND_FLAG and _f == NAME:
+                    os.remove(_f_path)
+                    print(f" Removed file {_f}")
+                
+                if IF_FIND_FLAG and NAME in _f:
+                    os.remove(_f_path)
+                    print(f" Removed file {_f}")
+            
+            for _d in dirs:
+                _d_path = os.path.join(root, _d)
+                
+                if not IF_FIND_FLAG and _f == NAME:
+                    os.remove(_d_path)
+                    print(f" Removed folder {_f}")
+                
+                if IF_FIND_FLAG and NAME in _f:
+                    shutil.rmtree(_d_path)
+                    print(f" Removed folder {_f}")
+
 def Process(a, b):
     if b[0] == "proc":
         processName = str(b[1])
-        
+        PROCLIST_FLAG = False
+
         if not processName.endswith(".exe") and not "-c" in b:
             processName += ".exe"
 
+        if "-list" in b:
+            PROCLIST_FLAG = True
+
         found = False
+        PROCLIST_DONE = False
+
+        proc_data = ""
+
+        if (PROCLIST_FLAG):
+            print(f" Collecting process data...")
 
         for pid in psutil.process_iter(['pid', 'name', 'cpu_percent', 'exe']):
-            if pid.info["name"] == processName:
+            if (PROCLIST_FLAG) and not pid.info["name"] in ["", None]:
+
+                proc = psutil.Process(pid.info['pid'])
+                
+                if not "-cud" in b:
+                    if not proc.cpu_percent(interval=0.1) == 0:
+                        cpu_usage_list = proc.cpu_percent(interval=5) / psutil.cpu_count()
+                    else:
+                        cpu_usage_list = "0"
+
+                else:
+                    cpu_usage_list = "(unable to get)"
+
+                proc_data += f"{pid.info['name']:<60}: \t{cpu_usage_list}\n"
+
+                PROCLIST_DONE = True
+                found = True
+
+            if pid.info["name"] == processName and not PROCLIST_FLAG:
                 cpu_usage = "N/A"
 
                 proc = psutil.Process(pid.info['pid'])
@@ -863,6 +934,12 @@ def Process(a, b):
 
         if not found:
             print(" Could not find process")
+
+        if (PROCLIST_DONE):
+            now = datetime.datetime.now()
+            formatted_time = now.strftime("%a, %H:%M:%S")
+
+            longprint(f"Shows process data (taken on {formatted_time}), the number on the side is the CPU usage.\n\n{proc_data}")
 
         return True
     
@@ -981,4 +1058,5 @@ CommandList = [ # Once you make a new function, add it here!
     SysData,
     PythonUtils,
     Path,
+    NameDelta
 ]

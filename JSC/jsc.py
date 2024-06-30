@@ -9,6 +9,7 @@
 import os, shlex, random
 
 import commands
+import sys, io
 
 from commands import Marg
 from commands import CommandList
@@ -16,10 +17,12 @@ from commands import LINES
 #from commands import rmin, rmax
 
 import colorama.ansi
+from rich.console import Console
 from commands import Title
 
 # END LIBRARIES #
 
+#console = Console()
 
 os.system('cls')
 os.system('color 3f')
@@ -27,7 +30,6 @@ os.system('color 3f')
 CHARACTER = ""
 
 os.system(f"cd {os.getcwd()}")
-os.system('mode 75,45')
 
 def CUSTOM_COLOR(red, green, blue):
     return f'\033[38;2;{red};{green};{blue}m'

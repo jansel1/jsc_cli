@@ -27,14 +27,18 @@ Variables are made by doing ``` % myVar 1500 ```, which stores it to an array ca
 
 Now, how this all works comes down to ```eval()``` as of now. Which is unsafe, because people can directly execute Python code in it. I won't talk to much about this because why would I?
 
-# Syntax
+# Commands & Syntax
+## Basic commands
 
-The syntax is following:
 ```
     % Variable <n> <flags...>       After "%", leave a space and type your variable name, then, put your string, float, int, etc. into <n>, preferrably with qoutation marks. Flags are: 
         *-math (for math operations)
     
     %Variable   Basically a placeholder for a variable, so you can use it anywhere and it will be replaced with your variable value.
 
-    WIP!
+    $command    Runs a Windows Commant Prompt command
+
+    cout <text or variable(s)>      Prints out text/variables
+    lcout <text or variable> <amnt>     Prints out text/variables <amnt> of times
+    
 ```
