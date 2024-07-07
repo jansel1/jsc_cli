@@ -230,6 +230,8 @@
 ## Important!
 If your string has a space in it, like "hey world", REMEMBER TO USE QOUTATION MARKS AROUND IT! Or else it will error out. Also, qoutation marks inside outher qoutation marks are broken!
 
+ALSO, SOME COMMANDS WILL OUTPUT TO NOTEPAD.EXE (OR YOUR DEFAULT NOTEPAD) BECAUSE THE FUCKING TERMINAL SUCKS ASS! THIS MIGHT BE FIXED SOON I HOPE!
+
 # Variables
 
 To make a variable you must do `% <variable name> <variable value>`, and to use a variable you do `%<variable name>` (without the '<>' things ofcourse), DIFFERNCE IS: to use the variable, the '%' and the variable name are not seperated!

@@ -1041,6 +1041,8 @@ def Path(a, b): # Shits suck
             os.environ['PATH'] = new_path_variable
 
             print(" Added directory to PATH (for this current session).")
+            
+        return True
 
 def duplicate_remove_sort(filepath):
     amt = 0
@@ -1077,6 +1079,8 @@ def Fort(a, b): # Stands for FileSort
         for sorts in SORT_TYPES:
             if SortType in sorts[0]:
                 sorts[1](FilePath)
+
+        return True
 
 def ParseFile(fil):
     with open(fil, 'r') as file:
@@ -1148,7 +1152,9 @@ def BrootMain(a, b):
             for pwd4 in passwords_4: f.write(pwd4 + "\n")
             for pwd5 in passwords_5: f.write(pwd5 + "\n")
 
-    ParseFile("./passwords.txt")
+        ParseFile("./passwords.txt")
+
+        return True
     
 ############# COMMANDS END #############
 

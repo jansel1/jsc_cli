@@ -134,10 +134,13 @@ while True:
                 #if not Cmd == True:
                     #print(f" Could not find command {_Input}, re-check spelling or make sure you added it to the `CommandList` array!")
                     #break # buggy shit
+                if (not Cmd):
+                    print(" Command does not exist! Please input a valid command.")
+                    break
+                else:   
+                    LAST_CMD = i
                 
-                LAST_CMD = i
-                
-            if (QUIT_AFTER_FLAG == True): quit()
+                    if (QUIT_AFTER_FLAG == True): quit()
 
         except Exception as e: 
             if (isinstance(e, IndexError)):
