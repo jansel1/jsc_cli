@@ -66,14 +66,6 @@ def DIS_V():
 
 LONG_PRINT_LOCATION = fr"{tempfile.gettempdir()}\JSC"
 
-def longprint(text): # used for making shit in notepad.exe idk
-    f = None
-
-    with open(fr"{LONG_PRINT_LOCATION}TemporaryFile-{time.time()}-{random.randint(1,100)}.txt", 'w') as f:
-        f.write(text)
-    
-    webbrowser.open(f.name)
-
 class Title:
     def Custom(text):
         os.system(f"title {text}")
@@ -104,7 +96,7 @@ def Return(Input, _Input):
         Input.replace('"', "'")
         _out = f" {_Input[1]}"
 
-        longprint(f"{_out}") # print(f"{_out.replace(_char2, str(random.randint(rmin, rmax)))} ")
+        print(f"{_out}") # print(f"{_out.replace(_char2, str(random.randint(rmin, rmax)))} ")
 
         return True
         
@@ -133,39 +125,41 @@ def LoopReturn(Input, _Input):
         for i in range(amt + 1):
             out += f"{_out}\n"
 
-        longprint(out)
+        print(out)
 
         return True
 
 def ReadFile(Input, _Input):
     try:
         if _Input[0] == "readf":
+            ae =  False
+
             CLONE_FLAG = False
 
             if "-cc" in _Input: CLONE_FLAG = True
 
-            try:
-                FilePath = _Input[1]
-            except:
-                Marg()
+            FilePath = _Input[1]
 
             
             if os.path.exists(FilePath) == False:
-                print(" Directory dosen't exist")
+                print(" File dosen't exist")
+                ae = True
+
                 return
 
 
             with open(FilePath, 'r+') as file:
                 if not CLONE_FLAG:
-                    longprint(f"{file.name}\n{file.read()}")
-                    print(" Getting file data.")
+                    print(f"{file.name}\n{file.read()}")
+                    print(f"\n\nSize - {os.path.getsize(file.name)} bytes\tAbs. Path - {os.path.abspath(file.name)}")
                 else:
                     pyperclip.copy(file.read())
                     print(" Copied text to clipboard.")
 
             return True 
     except:
-        print(" Missing file location arguement or could not find file")
+        if not ae:
+            print(" Missing file location arguement or could not find file")
         return True
 
 def Delta(Input, _Input):
@@ -455,19 +449,16 @@ def Pearl(a, b):
 
 def Dir(a, b):
     if b[0] in ["dir", "cd"]:
-        try:
-            Desired = b[1]
-            
-            if Desired == "-":
-                Desired = os.path.dirname(os.path.realpath(__file__))
+        Desired = b[1]
+        
+        if Desired == "-":
+            Desired = os.path.dirname(os.path.realpath(__file__))
 
-            os.chdir(Desired)
-            print(f" Changed working directory to '{Desired}'")
+        os.chdir(Desired)
 
-            DIRECTORY_HISTORY.append(Desired)
+        DIRECTORY_HISTORY.append(Desired)
 
-            return True
-        except: Marg()
+        return True
 
 def Run(a, b):
     if b[0] == "run.py":
@@ -573,7 +564,7 @@ def _Time(a, b):
 
 def wifi(a, b):
     if b[0] == "wif":
-        longprint(str(subprocess.check_output("netsh wlan show profiles name=*")).replace("\\n", "\n").replace("\\r", "\r"))
+        print(str(subprocess.check_output("netsh wlan show profiles name=*")).replace("\\n", "\n").replace("\\r", "\r"))
         return True
 
 def jsc(a, b):
@@ -966,7 +957,7 @@ def Process(a, b):
             now = datetime.datetime.now()
             formatted_time = now.strftime("%a, %H:%M:%S")
 
-            longprint(f"Shows process data (taken on {formatted_time}), the number on the side is the CPU usage.\n\n{proc_data}")
+            print(f"Shows process data (taken on {formatted_time}), the number on the side is the CPU usage.\n\n{proc_data}")
 
         return True
     
@@ -1021,9 +1012,7 @@ def PythonUtils(a, b):
         return True
     
 def Path(a, b): # Shits suck
-    b[1]
-
-    if b[0] == "path":
+    if b[0] == "path" and b[1]:
         current_path = os.getenv('PATH', '')
 
         if "-list" in b:
@@ -1155,7 +1144,36 @@ def BrootMain(a, b):
         ParseFile("./passwords.txt")
 
         return True
-    
+
+def GeneralCommands(Input, _Input):
+    if (_Input[0] == "xy"):
+        try:
+            X = int(_Input[1])
+            Y = int(_Input[2])
+        except: Marg()
+
+        confirm = input(" This command will clear all the text! Y/n to proceed:")
+
+        if (confirm.lower() == "y"):
+            os.system(f'mode {X},{Y}')
+        else:
+            pass
+
+    elif (_Input[0] == "whoami"): print(f" {os.getlogin()} at {os.path.normpath(os.path.expanduser('~/'))}")
+
+    elif (_Input[0]) == "ld": os.system("dir")
+
+
+    elif _Input[0] in ["qr", "restart", "r", "upt", "latest", "reset"]:
+        os.chdir(os.path.dirname(os.path.realpath(__file__)))
+        os.system("python jsc.py")
+
+        quit()
+
+    elif _Input[0] in ["q", "quit", "bye", "!!", "close"]: quit()
+
+def Ls(a, b):
+    ...
 ############# COMMANDS END #############
 
 CommandList = [ # Once you make a new function, add it here!
@@ -1203,5 +1221,6 @@ CommandList = [ # Once you make a new function, add it here!
     Path,
     NameDelta,
     Fort,
-    BrootMain
+    BrootMain,
+    GeneralCommands
 ]

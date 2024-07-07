@@ -7,8 +7,12 @@ JSC is still in development, but you can install the Alpha version! Install it a
 
 This is a fully open-source project, feel free to send pull request!
 
+**I highly suggest using Windows Terminal, so please, INSTALL IT AND SET IT AS THE DEFAULT!**
+(tutorial on how to install it)
 **P.S the website isn't regularly maintained - it's prone to bugs. I wont be updating it for a while.**
 # What is JSC?
+P.S the website isn't regularly maintained - it's prone to bugs. I wont be updating it for a while.
+
 
 
 JSC is a open-source Python CLI that helps with important tasks.
@@ -19,9 +23,9 @@ Most commands I made are kinda random, but there sure is a ton.
 
 Thanks for installing!
 
-# Read the docs!
-http://jansel.pages.dev/docs/
-(When visiting our website, dont add "www." infront of it. It will not work.)
+# Tutorials
+[Here are the docs](./DOC.md/)
+[How to install Windows Terminal (not required)](./TERMINAL.md)
 
 # More
 This is made using Python, and with that, sadly, the EXE size will be huge.

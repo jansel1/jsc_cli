@@ -8,7 +8,7 @@
 
 # LIBRARIES #
 
-import os, shlex, random
+import os, shlex, random, subprocess
 
 import commands
 import sys, io
@@ -21,11 +21,9 @@ from commands import LINES
 import colorama.ansi
 from rich.console import Console
 from commands import Title
-from commands import longprint
 
 # END LIBRARIES #
 
-#console = Console()
 
 os.system('cls')
 
@@ -49,6 +47,7 @@ max_ = 100
 
 while True:
     try:
+
         global_vars = commands.CURRENT_GLOBAL_VARIABLES
 
         Input = input(f" {C_RESET}{os.getcwd()} {C_PURPLE}$~ {C_WHITE} ")
@@ -62,7 +61,7 @@ while True:
             if f"%{vname}" in Input:
                 Input = str(Input.replace(CFG_VARIABLE_SYNTAX, str(vval)))
 
-        _Input = shlex.split(Input)
+        _Input = shlex.split(Input, posix=False)
 
         il = Input.lower()
 
@@ -74,44 +73,13 @@ while True:
         LOOPCMD_FLAG = False
         LOOPCMD_FLAG_INDEX = 0
 
-        ### WHRE TO PLACE FLAGS/INTERNAL COMMANDS!#####
-        if il in ["qr", "restart", "r", "upt", "latest", "reset"]:
-            os.chdir(os.path.dirname(os.path.realpath(__file__)))
-            os.system("python jsc.py")
+        ### WHRE TO PLACE FLAGS#####
 
-            quit()
-
-        if il in ["q", "quit", "bye", "!!", "close"]:
-            print("Qutting program")
-            quit()
-        
-        
         if ("-$q" in _Input): QUIT_AFTER_FLAG = True
         if (il == "lc"):
             print(str(LINES))
-
-        elif (_Input[0] == "xy"):
-            X = int(_Input[1])
-            Y = int(_Input[2])
-
-            confirm = input(" This command will clear all the text! Y/n to proceed:")
-
-            if (confirm.lower() == "y"):
-                os.system(f'mode {X},{Y}')
-            else:
-                pass
-        elif (_Input[0] == "whoami"):
-            print(f" {os.getlogin()} at {os.path.normpath(os.path.expanduser('~/'))}")
-        elif (_Input[0]) == "ld": # wip
-            directory = None
-
-            try:
-                directory = _Input[1]
-            except:
-                pass
             
-            if directory == None: directory = os.getcwd()
-
+        ### BUILT IN COMMANDS END ###
 
 
         LINES += 1
@@ -128,19 +96,14 @@ while True:
             for i in CommandList:
                 Cmd = i(Input, _Input)
 
-                #if Cmd == "cls":
-                    #LINES = 1
-                
-                #if not Cmd == True:
-                    #print(f" Could not find command {_Input}, re-check spelling or make sure you added it to the `CommandList` array!")
-                    #break # buggy shit
-                if (not Cmd):
+                if Cmd is False:
                     print(" Command does not exist! Please input a valid command.")
                     break
                 else:   
                     LAST_CMD = i
                 
-                    if (QUIT_AFTER_FLAG == True): quit()
+                if (QUIT_AFTER_FLAG == True): quit()
+
 
         except Exception as e: 
             if (isinstance(e, IndexError)):
@@ -148,20 +111,7 @@ while True:
             else:
                 print(e)
 
-    except IndexError:
-        print(" An index error has occured.")
+    except Exception as e:
+        print(f"{e}")
 
     Title.Reset()
-
-############# END MAIN STUFF #############
-
-# Notes:
-
-# My if statements might sometimes have () and not. My style changed idk why.
-# What I plan to achieve for JSC A. 1:
-    # Tons of commands
-
-# Current bugs:
-    # 1. some commands arent working (new ones)
-    # 2. gotta fix some other commands
-    # 3. print statements are 1 line under 
