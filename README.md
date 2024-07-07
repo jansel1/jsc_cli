@@ -25,6 +25,7 @@ Thanks for installing!
 
 # Read the docs!
 [Documentation](./DOC.md)
+
 [Install Windows Terminal (Recommended)](./TERMINAL.md)
 
 # More
