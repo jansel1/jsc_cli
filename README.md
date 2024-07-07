@@ -19,7 +19,7 @@ JSC is a open-source Python CLI that helps with important tasks.
 Most commands I made are kinda random, but there sure is a ton.
 
 ![A preview of the CLI (Taken on PBA 1.1.0 Beta)](./etc/Other/img-preview-console-jsc.PNG)
-(taken on PBA 1.1.0:42)
+(taken on PBA 1.1.2:46)
 
 Thanks for installing!
 
