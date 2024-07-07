@@ -23,9 +23,9 @@ Most commands I made are kinda random, but there sure is a ton.
 
 Thanks for installing!
 
-# Tutorials
-[Here are the docs](./DOC.md/)
-[How to install Windows Terminal (not required)](./TERMINAL.md)
+# Read the docs!
+http://jansel.pages.dev/docs/
+(When visiting our website, dont add "www." infront of it. It will not work.)
 
 # More
 This is made using Python, and with that, sadly, the EXE size will be huge.
