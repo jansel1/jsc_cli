@@ -1,44 +1,240 @@
-# Core
+# JSC Pre-Release Beta Alpha v1.1.2 : 46 Commands (PBA1.1.2:46)
 
-JSC (JanSel Command) is by no means a programming language - yes, it does include loops, variables, printing, etc. but this was made to be a replica of the Windows Command Prompt. The core-core comes down to the Command Prompt. JSC is just a (wrapper?) for it - meaning it dosen't use any UI libraries, just cmd.exe. I did that for simplicity, and for a light-weight release binary. Another thing to clear up is that, yes, this is very slow (since written in Python3.11). JSC was never intended to be fast, because if it was, I would've written it in C++. It's made to be simple for developers who want to re-make it (and also the amount of libraries Python has).
+# Command Documentation
 
-# Basics
+## General Commands:
 
-## This talks about how JSC processes commands
+### Return
+- **Syntax:** `cout <string>`
+- **Description:** Prints the given string.
 
-To get the command, like "wclone", etc. we use Pythons built-in function: ```input()```. It gets the users input, then does some things with shlex. Why shlex? Because for example, if I want to do this ``` cout Hello world ```, it will just print "hello", but shlex makes it so you can add qoutes: ``` cout "Hello world" ```, and the output would be "Hello world".
+### Clear
+- **Syntax:** `cls`, `clearscreen`, `-`
+- **Description:** Clears the console screen.
 
-Okay, moving on from Shlex, let me provide you a simple function template:
-```
-def DoSomething(a, b):
-    if b[0] == "myCmd":
-        ...
-``` 
-(you must add this function to the CommandList array in commands.py)
+### LoopReturn
+- **Syntax:** `lcout <string> <amount>`
+- **Description:** Prints the given string multiple times, specified by `<amount>`.
 
-So 'jsc.py' (lets call the compiler) sends 2 variables to each function in CommandList, NormalInput (a), and SplitInput (b). The difference between them is that NormalInput is the full input, so ``` cout "I love C" ```, but the SlitInput is ``` ["cout", "I love C"]```, an array. So our little function ```DoSomething``` checks if the first Input (b[0]) ("cout") matches its desired input/command name, "myCmd". If not, it will just skip.
+### RestartJSC
+- **Syntax** `qr`, `restart`, `r`, `upt`, `latest`, `reset`
+- **Description:** Restarts JSC
 
-NormalInput can be used for other things too.
-Also, to make flags, just do ``` if "myFlagName" in b: (run code) ```. This is a tip for the users, if using flags, please put them at the end or else your code will mess up.
+### QuitJSC
+- **Syntax** `q`, `quit`, `bye`, `!!`, `close`
+- **Description:** Quits JSC
 
-## How JSC processes variables and math
+### QuitAfter Flag
+- **Syntax** `<any command> <-$q>`
+- **Description:** Quits JSC after the command/task executed finishes.
 
-Variables are made by doing ``` % myVar 1500 ```, which stores it to an array called CURRENT_GLOBAL_VARIABLES. You can do math inside this, by doing ``` % myMath "1500+1500" -math```, which will store the output as its value. To do math with other variables, just do ``` %myMath "%x + %y" -math ```, and the output will be stored as the value.
+### whoami
+- **Syntax** `whoami`
+- **Description:** Prints the user's name
 
-Now, how this all works comes down to ```eval()``` as of now. Which is unsafe, because people can directly execute Python code in it. I won't talk to much about this because why would I?
+### Current Directory
+- **Syntax** `#`
+- **Description:** Prints current directory
 
-# Commands & Syntax
-## Basic commands
+### ReadFile
+- **Syntax:** `readf <file path> [-cc]`
+- **Description:** Reads and displays the contents of the specified file.
+  - `-cc`: Copies the file contents to clipboard.
 
-```
-    % Variable <n> <flags...>       After "%", leave a space and type your variable name, then, put your string, float, int, etc. into <n>, preferrably with qoutation marks. Flags are: 
-        *-math (for math operations)
-    
-    %Variable   Basically a placeholder for a variable, so you can use it anywhere and it will be replaced with your variable value.
+### Delta
+- **Syntax:** `delta`, `del <file or directory path>`
+- **Description:** Deletes the specified file or directory.
 
-    $command    Runs a Windows Commant Prompt command
+### Namef
+- **Syntax:** `namef <file path> <new name>`
+- **Description:** Renames the specified file to the new name.
 
-    cout <text or variable(s)>      Prints out text/variables
-    lcout <text or variable> <amnt>     Prints out text/variables <amnt> of times
-    
-```
+### Cf
+- **Syntax:** `cf <file name>`
+- **Description:** Creates a new file with the given name.
+
+### Stiff
+- **Syntax:** `stf`, `stiff`, `td <source file> <destination file>`
+- **Description:** Transfers contents from the source file to the destination file.
+
+### Url
+- **Syntax:** `http`, `url <link>`
+- **Description:** Opens the specified URL in a web browser.
+
+### Save
+- **Syntax:** `save`, `sv <file path>`
+- **Description:** Creates a save file for the specified file.
+
+### Ip
+- **Syntax:** `ip [-L <location>]`
+- **Description:** Displays the hostname and IP address.
+  - `-L`: Saves the IP address to the specified location.
+
+### Bomb
+- **Syntax:** `bomb <directory> <amount>`
+- **Description:** Creates multiple files in the specified directory.
+
+### Reg
+- **Syntax:** `reg <command>`
+- **Description:** Executes the specified command and prints the output.
+
+### Blank
+- **Syntax:** `blk <directory>`
+- **Description:** Blanks out all files in the specified directory.
+
+### Corrupt
+- **Syntax:** `cor <file path>`
+- **Description:** Corrupts the specified file.
+
+### C
+- **Syntax:** `c`, `cff <directory>`
+- **Description:** Creates a new directory.
+
+### Pearl
+- **Syntax:** `pearl`, `prl`, `cln`, `clean`, `powerwash`, `purge <directory>`
+- **Description:** Cleans up the specified directory by removing empty files and directories.
+
+### Dir
+- **Syntax:** `dir`, `cd <directory>`
+- **Description:** Changes the working directory to the specified directory.
+
+### Run
+- **Syntax:** `run.py <file path>`, `run.t <file path>`
+- **Description:** Executes the specified Python file or script.
+
+### SocketInfo
+- **Syntax:** `ski <hostname or ip adress> [-h]`
+- **Description:** Displays the IP address or hostname.
+  - `-h`: Displays the hostname (argument must be valid IP adress).
+
+### working
+- **Syntax:** `working`, `test`
+- **Description:** Runs a test loop for a random number of iterations.
+
+### hello
+- **Syntax:** `/hi`
+- **Description:** Prints "Halloes!"
+
+### Hide
+- **Syntax:** `hif <file path>`, `hif /u <file path>`
+- **Description:** Hides or unhides the specified file.
+
+### _Time
+- **Syntax:** `time`, `t`
+- **Description:** Displays the current date and time.
+
+### wifi
+- **Syntax:** `wif`
+- **Description:** Displays WiFi profiles.
+
+### jsc
+- **Syntax:** `jsc`
+- **Description:** Opens the JanSel Command (JSC) web page.
+
+### Random
+- **Syntax:** `randint <min> <max>`, `randstr [characters]`
+- **Description:** Generates a random integer between min and max or a random string from the given characters.
+
+### Explorer
+- **Syntax:** `explorer.exe`, `explorer`, `exp`, `exp.exe`
+- **Description:** Opens File Explorer.
+
+### Open
+- **Syntax:** `$<program>`
+- **Description:** Opens the specified program.
+
+### ByteView
+- **Syntax:** `readb <file path>`
+- **Description:** Reads and displays the byte data of the specified file.
+
+### MkShortcut
+- **Syntax:** `ms`, `mks`, `short`, `portal`, `witch <location> <destination> <name>`
+- **Description:** Creates a shortcut to the specified location.
+
+### CloneURL
+- **Syntax:** `wclone`, `corl`, `webclone <url> [-cc]`
+- **Description:** Clones the specified webpage to a file or clipboard.
+  - `-cc`: Copies the HTML content to clipboard.
+
+### WebStat
+- **Syntax:** `webstat`, `webs`, `reqstat <url> [-ping] [-pingfr]`
+- **Description:** Checks the status of the specified URL.
+  - `-ping`: Pings the URL.
+  - `-pingfr`: Pings the URL continuously.
+
+### FindFile
+- **Syntax:** `syscan`, `dscan <path> <name> [-c] [#]`
+- **Description:** Searches for the specified file or directory.
+  - `-c`: Scans the C drive.
+  - `#`: Scans the current working directory.
+
+### VariableDef
+- **Syntax:** `% <variable name> <value> [-math]`
+- **Description:** Defines a global variable with the specified name and value.
+  - `-math`: Evaluates the value as a mathematical expression.
+
+### SpewVariables
+- **Syntax:** `globals`, `vlist`
+- **Description:** Lists all global variables.
+
+### Range
+- **Syntax:** `range <min> <max>`
+- **Description:** Sets the random range for generating random numbers.
+
+### ListMk
+- **Syntax:** `listmk`, `mklist <data> [-h <header1> <header2>]`
+- **Description:** Creates a table from the given data.
+  - `-h`: Adds headers to the table.
+
+### Process
+- **Syntax:** `proc <process name> [-list] [-t] [-ft] [-cud]`
+- **Description:** Manages processes.
+  - `-list`: Lists all processes.
+  - `-t`: Terminates the process.
+  - `-ft`: Force terminates the process.
+  - `-cud`: Disables CPU usage display.
+
+### SysData
+- **Syntax:** `sysinfo`, `sys`
+- **Description:** Displays system information including CPU, RAM, and OS details.
+
+### PythonUtils
+- **Syntax:** `pyutil <file> [-dir] [-sta] [-exe]`, `pyutil -version`
+- **Description:** Utility commands for Python files.
+  - `-dir`: Uses one directory mode.
+  - `-sta`: Uses one file mode.
+  - `-exe`: Converts the Python file to an executable.
+  - `-version`: Displays the Python version.
+
+### Path
+- **Syntax:** `path <directory> [-list] [-mk]`
+- **Description:** Manages the PATH environment variable.
+  - `-list`: Lists all directories in the PATH.
+  - `-mk`: Adds a directory to the PATH.
+
+### NameDelta
+- **Syntax:** `deltn <location> <name> [-find]`
+- **Description:** Deletes files or directories with the specified name.
+  - `-find`: Deletes files or directories that contain the specified name.
+
+### Fort
+- **Syntax:** `fort <file path> <sort type>`
+- **Description:** Sorts the contents of the specified file.
+  - `-dupes`: Removes duplicate lines.
+  - `-reverse`: Reverses the file content.
+
+### BrootMain
+- **Syntax:** `broot`, `passlist <tags> <amount>`
+- **Description:** Generates a password list based on the specified tags and amount.
+
+## Important!
+If your string has a space in it, like "hey world", REMEMBER TO USE QOUTATION MARKS AROUND IT! Or else it will error out. Also, qoutation marks inside outher qoutation marks are broken!
+
+# Variables
+
+To make a variable you must do `% <variable name> <variable value>`, and to use a variable you do `%<variable name>` (without the '<>' things ofcourse), DIFFERNCE IS: to use the variable, the '%' and the variable name are not seperated!
+
+You can use that variable anywhere, such as `cout %myVariable`, and it will return whatever value you stored. 
+
+# More
+This was generated by ChatGPT, since it's hard to document all commands. Some commands might now work, so please report them to me! 

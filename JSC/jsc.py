@@ -19,13 +19,13 @@ from commands import LINES
 import colorama.ansi
 from rich.console import Console
 from commands import Title
+from commands import longprint
 
 # END LIBRARIES #
 
 #console = Console()
 
 os.system('cls')
-os.system('color 3f')
 
 CHARACTER = ""
 
@@ -72,27 +72,22 @@ while True:
         LOOPCMD_FLAG = False
         LOOPCMD_FLAG_INDEX = 0
 
-        # CORE #
+        ### WHRE TO PLACE FLAGS/INTERNAL COMMANDS!#####
         if il in ["qr", "restart", "r", "upt", "latest", "reset"]:
             os.chdir(os.path.dirname(os.path.realpath(__file__)))
             os.system("python jsc.py")
 
             quit()
 
-        #il.replace("<$Random>", str(random.randint(rmin, rmax)))
-
         if il in ["q", "quit", "bye", "!!", "close"]:
             print("Qutting program")
             quit()
         
-        # Handles flags etc
+        
         if ("-$q" in _Input): QUIT_AFTER_FLAG = True
-        if ("-$l" in _Input): 
-            LOOPCMD_FLAG = True
-            LOOPCMD_FLAG_INDEX = _Input.index("-$l")
-
         if (il == "lc"):
             print(str(LINES))
+            
         elif (_Input[0] == "xy"):
             X = int(_Input[1])
             Y = int(_Input[2])
@@ -105,10 +100,21 @@ while True:
                 pass
         elif (_Input[0] == "whoami"):
             print(f" {os.getlogin()} at {os.path.normpath(os.path.expanduser('~/'))}")
+        elif (_Input[0]) == "ld": # wip
+            directory = None
+
+            try:
+                directory = _Input[1]
+            except:
+                pass
             
+            if directory == None: directory = os.getcwd()
+
+
+
         LINES += 1
 
-        ###################################
+        ################################### mainn 
 
         # This handles the command '#', used for listing the current direcotry.
 
@@ -130,15 +136,6 @@ while True:
                 LAST_CMD = i
                 
             if (QUIT_AFTER_FLAG == True): quit()
-            if (LOOPCMD_FLAG == True): 
-                try:
-                    AMNT = _Input[LOOPCMD_FLAG_INDEX + 1]
-                except: 
-                    Marg()
-                
-                for i in range(int(AMNT)):
-                    LAST_CMD(Input, _Input)
-                    print(LAST_CMD)
 
         except Exception as e: 
             if (isinstance(e, IndexError)):
@@ -147,7 +144,7 @@ while True:
                 print(e)
 
     except IndexError:
-        Marg()
+        print(" An index error has occured.")
 
     Title.Reset()
 

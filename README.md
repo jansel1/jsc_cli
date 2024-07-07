@@ -1,12 +1,11 @@
 
-# JSC Pre-Release Beta Alpha v1.1.0 : 42 Commands (PBA1.1.0:42)
+# JSC Pre-Release Beta Alpha v1.1.2 : 46 Commands (PBA1.1.2:46)
 
 JSC is still in development, but you can install the Alpha version! Install it at http://jansel.pages.dev or on GitHub (listed on the website or just go to http://github.com/jansel1/jsc_cli)
 
 (The version listed above is the current version - I might forget to update the version on the website)
 
 This is a fully open-source project, feel free to send pull request!
-As of PBA1.1, there are 42 commands, which won't be documented for a while. 
 
 **P.S the website isn't regularly maintained - it's prone to bugs. I wont be updating it for a while.**
 # What is JSC?

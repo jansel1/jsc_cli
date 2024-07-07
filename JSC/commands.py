@@ -17,6 +17,7 @@ import psutil
 import platform
 import sys
 import tempfile
+import re
 
 from rich.console import Console
 from tabulate import tabulate
@@ -62,6 +63,17 @@ def match_split(Table, Keyword):
 def DIS_V():
     print("  # JSC version: Alpha #")
 
+
+LONG_PRINT_LOCATION = fr"{tempfile.gettempdir()}\JSC"
+
+def longprint(text): # used for making shit in notepad.exe idk
+    f = None
+
+    with open(fr"{LONG_PRINT_LOCATION}TemporaryFile-{time.time()}-{random.randint(1,100)}.txt", 'w') as f:
+        f.write(text)
+    
+    webbrowser.open(f.name)
+
 class Title:
     def Custom(text):
         os.system(f"title {text}")
@@ -92,7 +104,7 @@ def Return(Input, _Input):
         Input.replace('"', "'")
         _out = f" {_Input[1]}"
 
-        print(f"{_out}") # print(f"{_out.replace(_char2, str(random.randint(rmin, rmax)))} ")
+        longprint(f"{_out}") # print(f"{_out.replace(_char2, str(random.randint(rmin, rmax)))} ")
 
         return True
         
@@ -106,11 +118,11 @@ def Clear(Input, _Input):
         return True
     
 def LoopReturn(Input, _Input):
-    if _Input[0] == "lcout":
-        _out = f" {_Input[1]}"
+    out = ""
 
-        #_char1 = "<$Amount>"
-        #_char2 = "<$Random>"
+    if _Input[0] == "lcout":
+
+        _out = f" {_Input[1]}"
 
         amt = 5
         try:
@@ -119,13 +131,19 @@ def LoopReturn(Input, _Input):
             pass
 
         for i in range(amt + 1):
-            print(_out)
+            out += f"{_out}\n"
+
+        longprint(out)
 
         return True
 
 def ReadFile(Input, _Input):
     try:
         if _Input[0] == "readf":
+            CLONE_FLAG = False
+
+            if "-cc" in _Input: CLONE_FLAG = True
+
             try:
                 FilePath = _Input[1]
             except:
@@ -135,10 +153,15 @@ def ReadFile(Input, _Input):
             if os.path.exists(FilePath) == False:
                 print(" Directory dosen't exist")
                 return
+
+
             with open(FilePath, 'r+') as file:
-                print(f" {file.name}\n")
-                
-                print(file.read())
+                if not CLONE_FLAG:
+                    longprint(f"{file.name}\n{file.read()}")
+                    print(" Getting file data.")
+                else:
+                    pyperclip.copy(file.read())
+                    print(" Copied text to clipboard.")
 
             return True 
     except:
@@ -550,7 +573,7 @@ def _Time(a, b):
 
 def wifi(a, b):
     if b[0] == "wif":
-        print(str(subprocess.check_output("netsh wlan show profiles name=*")).replace("\\n", "\n").replace("\\r", "\r"))
+        longprint(str(subprocess.check_output("netsh wlan show profiles name=*")).replace("\\n", "\n").replace("\\r", "\r"))
         return True
 
 def jsc(a, b):
@@ -825,21 +848,13 @@ def ListMk(a, b):                                       # to be fixed
 
         return True
 
-LONG_PRINT_LOCATION = fr"{tempfile.gettempdir()}\JSC"
-
-def longprint(text):
-    f = None
-
-    with open(fr"{LONG_PRINT_LOCATION}TemporaryFile-{time.time()}-{random.randint(1,100)}.txt", 'w') as f:
-        f.write(text)
-    
-    webbrowser.open(f.name)
-
-def NameDelta(a, b):
+def NameDelta(a, b): # WIP! Fix: cannot remove directories
     IF_FIND_FLAG = False
+    
+    removed = []
 
     if b[0] == "deltn":
-        if "-find" in b: IF_FIND_FLAG == True
+        if "-find" in b: IF_FIND_FLAG = True
 
         LOCATION = b[1]
         NAME = b[2]
@@ -848,24 +863,36 @@ def NameDelta(a, b):
             for _f in files:
                 _f_path = os.path.join(root, _f)
                 
-                if not IF_FIND_FLAG and _f == NAME:
-                    os.remove(_f_path)
-                    print(f" Removed file {_f}")
+                if IF_FIND_FLAG == False:
+                    if _f == NAME:
+                        os.remove(_f_path)
+                        removed.append(f" Removed file {_f}")
                 
-                if IF_FIND_FLAG and NAME in _f:
-                    os.remove(_f_path)
-                    print(f" Removed file {_f}")
+                else: 
+                    if NAME in _f:
+                        os.remove(_f_path)
+                        removed.append(f" Removed file {_f}")
             
             for _d in dirs:
                 _d_path = os.path.join(root, _d)
                 
-                if not IF_FIND_FLAG and _f == NAME:
-                    os.remove(_d_path)
-                    print(f" Removed folder {_f}")
+                if IF_FIND_FLAG == False:
+                    if _f == NAME:
+                        os.remove(_d_path)
+                        removed.append(f" Removed folder {_f}")
                 
-                if IF_FIND_FLAG and NAME in _f:
-                    shutil.rmtree(_d_path)
-                    print(f" Removed folder {_f}")
+                else: 
+                    if NAME in _f:
+                        shutil.rmtree(_d_path)
+                        removed.append(f" Removed folder {_f}")
+
+        if not len(removed) == 0:
+            out = f"All files deleted in {os.path.abspath(LOCATION)}"
+
+            for file in removed:
+                out += f"{file}\n"
+        else:
+            print(" Could not find files/folders to remove.")
 
 def Process(a, b):
     if b[0] == "proc":
@@ -994,6 +1021,8 @@ def PythonUtils(a, b):
         return True
     
 def Path(a, b): # Shits suck
+    b[1]
+
     if b[0] == "path":
         current_path = os.getenv('PATH', '')
 
@@ -1011,8 +1040,116 @@ def Path(a, b): # Shits suck
 
             os.environ['PATH'] = new_path_variable
 
-            print(" Added directory to PATH.")
+            print(" Added directory to PATH (for this current session).")
 
+def duplicate_remove_sort(filepath):
+    amt = 0
+    with open(filepath, 'r') as file:
+        lines = file.readlines()
+        amt = len(file.readlines())
+
+    unique_lines = list(set(lines))
+
+    with open(filepath, 'w') as file:
+        file.writelines(unique_lines)
+
+    print(" Removed duplicates")
+
+def reverse_file_sort(filepath):
+    with open(filepath, 'w+') as file:
+        file.write(str(reversed(file.read())))
+        print(" Reversed text")
+
+def Fort(a, b): # Stands for FileSort
+    if b[0] == "fort":
+        if b[1] == "?":
+            print()
+            return
+        
+        FilePath = b[1]
+        SortType = b[2]
+
+        SORT_TYPES = [
+            ["-dupes", duplicate_remove_sort],
+            ["-reverse", reverse_file_sort]
+        ]
+
+        for sorts in SORT_TYPES:
+            if SortType in sorts[0]:
+                sorts[1](FilePath)
+
+def ParseFile(fil):
+    with open(fil, 'r') as file:
+        lines = file.readlines()
+
+    unique_lines = list(set(lines))
+    out = [line for line in unique_lines if not re.fullmatch(r'\d+', line.strip())]
+
+    with open(fil, 'w') as file:
+        file.writelines(out)
+
+def BrootMain(a, b):
+    if b[0] in ["broot", "passlist"]:
+        symbols = ".!?#-"
+
+        Extratags = b[1].split(',')
+        Amount = b[2]
+
+        passwords = []
+
+        passwords_2 = [] # All lowercase
+        passwords_3 = [] # All upercase
+        passwords_4 = [] # No symbols
+        passwords_5 = [] # No numbers
+        
+        components = Extratags
+
+        for tag in Extratags:
+            passwords.append(tag)
+
+        for _ in range(int(Amount)):
+            password = ""
+            num_parts = random.randint(1, 3)
+
+            parts = random.sample(components, num_parts)
+
+            for p in parts:
+                password += p
+
+            if random.choice([True, False]):
+                password += str(random.randint(0, 1000))
+            
+            if random.choice([True, False]):
+                if random.choice([True, False]):
+                    password = random.choice(symbols) + password
+                else:
+                    password += random.choice(symbols)
+
+            if password:
+                index = random.randint(0, len(password) - 1)
+                if password[index].isalpha():
+                    password = password[:index] + password[index].upper() + password[index+1:]
+
+            passwords.append(password)
+
+        passwords_2 = [element.lower() for element in passwords]
+        passwords_3 = [element.upper() for element in passwords]
+
+        passwords_4 = [''.join(re.findall(r'\w', element)) for element in passwords]
+        passwords_5 = [''.join(re.findall(r'[A-Za-z]', element)).upper() for element in passwords]
+
+
+        print("Don't exit, we're storing the passwords to ./passwords.txt")
+
+        with open("./passwords.txt", 'a') as f:
+            for pwd in passwords: f.write(pwd + "\n")
+            for pwd2 in passwords_2: f.write(pwd2 + "\n")
+            for pwd3 in passwords_3: f.write(pwd3 + "\n")
+            for pwd4 in passwords_4: f.write(pwd4 + "\n")
+            for pwd5 in passwords_5: f.write(pwd5 + "\n")
+
+    ParseFile("./passwords.txt")
+    
 ############# COMMANDS END #############
 
 CommandList = [ # Once you make a new function, add it here!
@@ -1058,5 +1195,7 @@ CommandList = [ # Once you make a new function, add it here!
     SysData,
     PythonUtils,
     Path,
-    NameDelta
+    NameDelta,
+    Fort,
+    BrootMain
 ]

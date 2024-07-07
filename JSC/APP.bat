@@ -1,5 +1,5 @@
 @echo off
-color 3f
+title You ran this with APP.BAT!
 echo You ran this with APP.BAT!
 
 python "jsc.py"
