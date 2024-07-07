@@ -1,4 +1,4 @@
-Switching from Standalone to (normal?) since Python and PyInstaller suck major ass. 100mb standalone is crazy.
+Switching from Standalone executable to (normal?) since Python and PyInstaller suck major ass. 100mb standalone is crazy.
 
 PBA 1.1.0
 
