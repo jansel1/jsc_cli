@@ -1,6 +1,8 @@
 '''
     This is the core of JSC. Don't mess with any of this stuff if you don't know what you're doing!
     This script handles running the functions!
+
+    THIS IS THE JSC SYNTAX COMPILER!
 '''
 
 
@@ -87,7 +89,7 @@ while True:
         if ("-$q" in _Input): QUIT_AFTER_FLAG = True
         if (il == "lc"):
             print(str(LINES))
-            
+
         elif (_Input[0] == "xy"):
             X = int(_Input[1])
             Y = int(_Input[2])
