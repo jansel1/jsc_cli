@@ -20,7 +20,7 @@ Most commands I made are kinda random, but there sure is a ton.
 Thanks for installing!
 
 # Read the docs!
-http://jansel.pages.dev/docs/
+[The new and improved docs](https://github.com/jansel1/jsc_cli/blob/main/DOC.md)
 (When visiting our website, dont add "www." infront of it. It will not work.)
 
 # More
