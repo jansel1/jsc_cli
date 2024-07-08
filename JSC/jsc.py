@@ -45,13 +45,17 @@ Title.Reset()
 min_ = 0
 max_ = 100
 
+inp =  f" {C_RESET}{os.getcwd()} {C_PURPLE}$~ {C_WHITE} "
+
 while True:
     try:
 
         global_vars = commands.CURRENT_GLOBAL_VARIABLES
+        inp =  f" {C_RESET}{os.getcwd()} {C_PURPLE}$~ {C_WHITE} "
 
-        Input = input(f" {C_RESET}{os.getcwd()} {C_PURPLE}$~ {C_WHITE} ")
-        
+        Input = input(inp)
+        Input = Input.replace("\\", "\\\\")
+                              
         for sublist in global_vars:     # Variable handling
             vname = sublist[0]
             vval = sublist[1]
@@ -61,7 +65,7 @@ while True:
             if f"%{vname}" in Input:
                 Input = str(Input.replace(CFG_VARIABLE_SYNTAX, str(vval)))
 
-        _Input = shlex.split(Input, posix=False)
+        _Input = shlex.split(Input)
 
         il = Input.lower()
 
@@ -84,26 +88,33 @@ while True:
 
         LINES += 1
 
-        ################################### mainn 
-
         # This handles the command '#', used for listing the current direcotry.
+
+        command_found = None
 
         if _Input[0] in ["#"]:
             print(f" Current directory: '{os.getcwd()}'")
+
+        ## MAIN ##
         try:
             LAST_CMD = None
 
             for i in CommandList:
                 Cmd = i(Input, _Input)
 
-                if Cmd is False:
-                    print(" Command does not exist! Please input a valid command.")
-                    break
-                else:   
-                    LAST_CMD = i
-                
-                if (QUIT_AFTER_FLAG == True): quit()
+                if Cmd is None:
+                    continue
+                else:
+                    command_found = True
+                    commands._line_data.append(f"{inp}{Input}")
 
+                    break
+                
+            if (QUIT_AFTER_FLAG == True): quit()
+            
+
+            if not command_found:
+                print(" Command does not exist! Please input a valid command.")
 
         except Exception as e: 
             if (isinstance(e, IndexError)):

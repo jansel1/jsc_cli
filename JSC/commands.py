@@ -18,14 +18,18 @@ import platform
 import sys
 import tempfile
 import re
+import curses
+
 
 from rich.console import Console
 from tabulate import tabulate
 from urllib.parse import urlparse
+import urllib.request
 from bs4 import BeautifulSoup
 from threading import Thread
 from http.server import SimpleHTTPRequestHandler
 from pathlib import Path
+
 
 # END LIBRARIES #
 
@@ -99,13 +103,19 @@ def Return(Input, _Input):
         print(f"{_out}") # print(f"{_out.replace(_char2, str(random.randint(rmin, rmax)))} ")
 
         return True
-        
+_line_data = []
+
 def Clear(Input, _Input):
+    EXCEPT_COMMANDS_FLAG = False
     if _Input[0] in ["cls", "clearscreen", "-"]:
-        print(" Clearing...")
+        if "-ec" in _Input: EXCEPT_COMMANDS_FLAG = True
 
         time.sleep(0.1)
         os.system('cls')
+
+        if (EXCEPT_COMMANDS_FLAG):
+            for l in _line_data:
+                print(l)
 
         return True
     
@@ -157,9 +167,9 @@ def ReadFile(Input, _Input):
                     print(" Copied text to clipboard.")
 
             return True 
-    except:
+    except Exception as e:
         if not ae:
-            print(" Missing file location arguement or could not find file")
+            print(f" Missing file location arguement or could not find file or permission error\n{e}")
         return True
 
 def Delta(Input, _Input):
@@ -179,7 +189,7 @@ def Delta(Input, _Input):
         except:
             print(" Could not remove directory/folder.")
 
-    return True
+        return True
 
 _LETTERS_ = f"{string.ascii_letters}{string.digits}"
 
@@ -286,21 +296,12 @@ def Ip(a, b):
     dat = f"{dat_hn}\n{dat_ip}"
 
     if b[0] == "ip":
-        try:
-            if b[1] == "-L":
-                Dir = ""
+        external_ip = urllib.request.urlopen('https://ipinfo.io').read().decode('utf8')
+        city = urllib.request.urlopen('https://ipinfo.io/city').read().decode('utf8')
 
-                try: 
-                    Dir = b[2]
-                except: pass
+        print(f" IP data:\n {external_ip}")
+        print(f"Other:\n HOSTNAME: {dat_hn}\n PRIVATE: {dat_ip}")
 
-                with open(f"{Dir}", "x+") as file:
-                    file.write(dat.replace("\t", ""))
-
-                print(f" Saved your IP adress to '{Dir}'.\n")
-        except: pass
-        
-        print(dat)
         return True
 
 def Bomb(a, b):
@@ -388,7 +389,9 @@ def C(a, b):
             return
         try:
             os.mkdir(Directory)
-            print(f" Made directory/folder: (CD) - {os.path.abspath(Directory)}")
+            print(f" Made directory '{os.path.abspath(Directory)}'")
+
+            if "-cd" in b: os.chdir(Directory)
         except:
             print(" Could not make directory/folder.")
         return True
@@ -1159,24 +1162,203 @@ def GeneralCommands(Input, _Input):
         else:
             pass
 
-    elif (_Input[0] == "whoami"): print(f" {os.getlogin()} at {os.path.normpath(os.path.expanduser('~/'))}")
+        return True
 
-    elif (_Input[0]) == "ld": os.system("dir")
+    elif (_Input[0] == "whoami"): 
+        print(f" {os.getlogin()} at {os.path.normpath(os.path.expanduser('~/'))}")
+        return True
+
+    elif (_Input[0]) == "ld": 
+        os.system("dir")
+        return True
 
 
     elif _Input[0] in ["qr", "restart", "r", "upt", "latest", "reset"]:
         os.chdir(os.path.dirname(os.path.realpath(__file__)))
-        os.system("python jsc.py")
-
+        os.system("python jsc.py") 
         quit()
 
     elif _Input[0] in ["q", "quit", "bye", "!!", "close"]: quit()
 
+def CUSTOM_COLOR(red, green, blue): return f'\033[38;2;{red};{green};{blue}m'
+
 def Ls(a, b):
-    ...
+    if b[0] == "ls":
+        files = os.listdir()
+
+
+        out = ""
+
+        for file in files:
+            c = ""
+
+            if not os.path.isfile(file):
+                c = f"{colorama.Back.MAGENTA}"
+                data = f"{'N/A':<15} {'N/A':<20}"
+            else:
+                file_size = os.path.getsize(file)
+
+                last_modif = os.path.getmtime(file)
+                last_modif_str = datetime.datetime.fromtimestamp(last_modif).strftime('%Y-%m-%d %H:%M:%S')
+
+                data = f"{file_size:<15} {last_modif_str:<20}"
+
+            out += f"{c}{file:<40} {colorama.Back.RESET}{colorama.Fore.RESET} {data}\n"
+
+
+        print(out)
+
+        return True
+
+
+def curl(cmd): os.system(f"curl {cmd}")
+
+def Curls(a, b):
+    if b[0] == "weather": 
+        city = urllib.request.urlopen('https://ipinfo.io/city').read().decode('utf8')
+        if {b[1]}: city = b[1]
+
+        url = f"https://wttr.in/{city}"
+
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            weather_info = response.text
+            print(weather_info)
+        else:
+            print("Failed to retrieve weather information.")
+
+        return True
+
+    if b[0] == "unwrap":
+        url = b[1]
+        curl(f"--head --location \"{url}\" | findstr Location")
+
+        return True
+
+    if b[0] == "qrcode":
+        website = b[1]
+        curl(f"https://qrenco.de/https://{website}")
+
+        return True
+
+def WriteFile(a, b):
+    if b[0] == "writef":
+        def main(stdscr): # made by https://github.com/maksimKorzh/ (thanks)
+            file_path = b[1]
+            screen = curses.initscr()
+            screen.nodelay(1)
+            curses.noecho()
+            curses.raw()
+            screen.keypad(1)
+            
+            buffer = []
+            max_rows, max_cols = screen.getmaxyx()
+            view_x, view_y, cursor_row, cursor_col = [0] * 4
+
+            try:
+                with open(file_path) as file:
+                    content = file.read().split('\n')
+                    content = content[:-1] if len(content) > 1 else content
+                    for row in content:
+                        buffer.append([ord(char) for char in row])
+            except:
+                buffer.append([])
+
+            while True:
+                screen.move(0, 0)
+                if cursor_row < view_y:
+                    view_y = cursor_row
+                if cursor_row >= view_y + max_rows:
+                    view_y = cursor_row - max_rows + 1
+                if cursor_col < view_x:
+                    view_x = cursor_col
+                if cursor_col >= view_x + max_cols:
+                    view_x = cursor_col - max_cols + 1
+
+                for row in range(max_rows):
+                    buffer_row = row + view_y
+                    for col in range(max_cols):
+                        buffer_col = col + view_x
+                        try:
+                            screen.addch(row, col, buffer[buffer_row][buffer_col])
+                        except:
+                            pass
+                    screen.clrtoeol()
+                    try:
+                        screen.addch('\n')
+                    except:
+                        pass
+
+                curses.curs_set(0)
+                screen.move(cursor_row - view_y, cursor_col - view_x)
+                curses.curs_set(1)
+                screen.refresh()
+                char_input = -1
+
+                while char_input == -1:
+                    char_input = screen.getch()
+
+                if char_input != (char_input & 0x1f) and char_input < 128:
+                    buffer[cursor_row].insert(cursor_col, char_input)
+                    cursor_col += 1
+                elif chr(char_input) in '\n\r':
+                    remainder = buffer[cursor_row][cursor_col:]
+                    buffer[cursor_row] = buffer[cursor_row][:cursor_col]
+                    cursor_row += 1
+                    cursor_col = 0
+                    buffer.insert(cursor_row, [] + remainder)
+                elif char_input in [8, 263]:
+                    if cursor_col:
+                        cursor_col -= 1
+                        del buffer[cursor_row][cursor_col]
+                    elif cursor_row:
+                        remainder = buffer[cursor_row][cursor_col:]
+                        del buffer[cursor_row]
+                        cursor_row -= 1
+                        cursor_col = len(buffer[cursor_row])
+                        buffer[cursor_row] += remainder
+                elif char_input == curses.KEY_LEFT:
+                    if cursor_col != 0:
+                        cursor_col -= 1
+                    elif cursor_row > 0:
+                        cursor_row -= 1
+                        cursor_col = len(buffer[cursor_row])
+                elif char_input == curses.KEY_RIGHT:
+                    if cursor_col < len(buffer[cursor_row]):
+                        cursor_col += 1
+                    elif cursor_row < len(buffer) - 1:
+                        cursor_row += 1
+                        cursor_col = 0
+                elif char_input == curses.KEY_UP and cursor_row != 0:
+                    cursor_row -= 1
+                elif char_input == curses.KEY_DOWN and cursor_row < len(buffer) - 1:
+                    cursor_row += 1
+
+                current_row = buffer[cursor_row] if cursor_row < len(buffer) else None
+                current_row_length = len(current_row) if current_row is not None else 0
+                if cursor_col > current_row_length:
+                    cursor_col = current_row_length
+
+                if char_input == (ord('q') & 0x1f):
+                    try:
+                        os.system(f"{__file__}")
+                    except: os.system(f"python {__file__}")
+
+                    sys.exit()
+                elif char_input == (ord('s') & 0x1f):
+                    content = ''
+                    for line in buffer:
+                        content += ''.join([chr(char) for char in line]) + '\n'
+                    with open(file_path, 'w') as file:
+                        file.write(content)
+
+        curses.wrapper(main)
+
+        return True
 ############# COMMANDS END #############
 
-CommandList = [ # Once you make a new function, add it here!
+CommandList = [ # Once you make a new function, add it here! 
     Return,
     Clear,
     LoopReturn,
@@ -1222,5 +1404,8 @@ CommandList = [ # Once you make a new function, add it here!
     NameDelta,
     Fort,
     BrootMain,
-    GeneralCommands
+    GeneralCommands,
+    Ls,
+    Curls,
+    WriteFile
 ]
