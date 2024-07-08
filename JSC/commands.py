@@ -33,6 +33,9 @@ from threading import Thread
 from http.server import SimpleHTTPRequestHandler
 from pathlib import Path
 
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # END LIBRARIES #
 
@@ -1394,7 +1397,32 @@ def Crypt(a, b):
         except Exception as e:
             print(f"An error occurred: {e}")
         return True
-    
+
+def Email(a, b): # piece of broken shit
+    if b[0] in ["email", "gmail"]: # email my@gmail.com you@gmail.com "I love u" "Python!" "<your password>"
+        sender_email = b[1]
+        receiver_email = b[2]
+        subject = b[3]
+        body = b[4]
+        password = b[5]
+        
+        print(sender_email, receiver_email, subject, body, password)
+        message = MIMEMultipart()
+        message['From'] = sender_email
+        message['To'] = receiver_email
+        message['Subject'] = subject
+        message.attach(MIMEText(body, 'plain'))
+        
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+
+        server.login(sender_email, password)
+        text = message.as_string()
+
+        server.sendmail(sender_email, receiver_email, text)
+        server.quit()
+
+      
 ############# COMMANDS END #############
 
 CommandList = [ # Once you make a new function, add it here! 
@@ -1446,6 +1474,7 @@ CommandList = [ # Once you make a new function, add it here!
     GeneralCommands,
     Ls,
     Curls,
-    WriteFile,
-    Crypt
+    WriteFile,          # BUGGY
+    Crypt,
+    Email
 ]

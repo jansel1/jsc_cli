@@ -8,10 +8,15 @@ JSC is still in development, but you can install the Alpha version! Install it a
 This is a fully open-source project, feel free to send pull request!
 
 **I highly suggest using Windows Terminal, so please, INSTALL IT AND SET IT AS THE DEFAULT!**
-(tutorial on how to install it)
+## I HIGHLY RECOMMEND RUNNING THIS ON PYTHON INSTEAD OF USING THE EXE, SINCE THE EXE IS BIG AND SLOW.
+ To run in Python, make sure you have the required libraries, (requirements.txt)
+ if requirements.txt is still missing libraries, just go to ./mylibraries.txt and it will show you all my libraries.
+ 
+ Then, just go to ./JSC/APP.bat and it will work. You just gotta make a shortcut for it.
+
 **P.S the website isn't regularly maintained - it's prone to bugs. I wont be updating it for a while.**
+
 # What is JSC?
-P.S the website isn't regularly maintained - it's prone to bugs. I wont be updating it for a while.
 
 
 
