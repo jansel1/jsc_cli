@@ -19,7 +19,10 @@ import sys
 import tempfile
 import re
 import curses
+import base64
+import hashlib
 
+from cryptography.fernet import Fernet
 
 from rich.console import Console
 from tabulate import tabulate
@@ -1243,13 +1246,8 @@ def Curls(a, b):
         return True
 
 def WriteFile(a, b):
-    import curses
-import os
-import sys
-
-def WriteFile(a, b):
     if b[0] == "writef":
-        def main(stdscr):  # made by https://github.com/maksimKorzh/ (thanks)
+        def main(stdscr):  # made by https://github.com/maksimKorzh/ (thanks) kinda broken :(
             file_path = b[1]
             screen = curses.initscr()
             screen.nodelay(1)
@@ -1352,7 +1350,51 @@ def WriteFile(a, b):
 
         curses.wrapper(main)
         return True
+    
+def Crypt(a, b):
+    ENCRYPT_FLAG = False
+    TEXT_MODE = False
 
+    if b[0] == "crypt":
+        if "-e" in b: 
+            ENCRYPT_FLAG = True
+        if "-text" in b: 
+            TEXT_MODE = True
+
+        FilePath = b[1]
+        Password = b[2].encode()
+
+        key = base64.urlsafe_b64encode(hashlib.sha256(Password).digest())
+        cipher = Fernet(key)
+
+        try:
+            if ENCRYPT_FLAG:
+                if not TEXT_MODE:
+                    with open(FilePath, 'rb') as file:
+                        encrypted_data = cipher.encrypt(file.read())
+                    
+                    with open(FilePath, 'wb') as file:
+                        file.write(encrypted_data)
+                    print(f"Encrypted file: {FilePath}")
+                else:
+                    encrypted_text = cipher.encrypt(FilePath.encode())
+                    print(f"Encrypted text: {encrypted_text.decode()}")
+            else:
+                if not TEXT_MODE:
+                    with open(FilePath, 'rb') as file:
+                        decrypted_data = cipher.decrypt(file.read())
+                    
+                    with open(FilePath, 'w') as file:
+                        file.write(decrypted_data.decode())
+
+                    print(f"Decrypted file: {FilePath}")
+                else:
+                    decrypted_text = cipher.decrypt(FilePath.encode())
+                    print(f"Decrypted text: {decrypted_text.decode()}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+        return True
+    
 ############# COMMANDS END #############
 
 CommandList = [ # Once you make a new function, add it here! 
@@ -1404,5 +1446,6 @@ CommandList = [ # Once you make a new function, add it here!
     GeneralCommands,
     Ls,
     Curls,
-    WriteFile
+    WriteFile,
+    Crypt
 ]

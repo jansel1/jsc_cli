@@ -69,7 +69,7 @@ while True:
 
         il = Input.lower()
 
-        print(colorama.Fore.RESET)
+        print(colorama.Fore.RESET, end="\r")
 
         # FLAGS #
         QUIT_AFTER_FLAG = False
