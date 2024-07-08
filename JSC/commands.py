@@ -1243,15 +1243,20 @@ def Curls(a, b):
         return True
 
 def WriteFile(a, b):
+    import curses
+import os
+import sys
+
+def WriteFile(a, b):
     if b[0] == "writef":
-        def main(stdscr): # made by https://github.com/maksimKorzh/ (thanks)
+        def main(stdscr):  # made by https://github.com/maksimKorzh/ (thanks)
             file_path = b[1]
             screen = curses.initscr()
             screen.nodelay(1)
             curses.noecho()
             curses.raw()
             screen.keypad(1)
-            
+
             buffer = []
             max_rows, max_cols = screen.getmaxyx()
             view_x, view_y, cursor_row, cursor_col = [0] * 4
@@ -1284,12 +1289,8 @@ def WriteFile(a, b):
                             screen.addch(row, col, buffer[buffer_row][buffer_col])
                         except:
                             pass
-                    screen.clrtoeol()
-                    try:
-                        screen.addch('\n')
-                    except:
-                        pass
 
+                screen.clrtoeol()
                 curses.curs_set(0)
                 screen.move(cursor_row - view_y, cursor_col - view_x)
                 curses.curs_set(1)
@@ -1341,11 +1342,7 @@ def WriteFile(a, b):
                     cursor_col = current_row_length
 
                 if char_input == (ord('q') & 0x1f):
-                    try:
-                        os.system(f"{__file__}")
-                    except: os.system(f"python {__file__}")
-
-                    sys.exit()
+                    break
                 elif char_input == (ord('s') & 0x1f):
                     content = ''
                     for line in buffer:
@@ -1354,8 +1351,8 @@ def WriteFile(a, b):
                         file.write(content)
 
         curses.wrapper(main)
-
         return True
+
 ############# COMMANDS END #############
 
 CommandList = [ # Once you make a new function, add it here! 
