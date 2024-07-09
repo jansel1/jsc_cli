@@ -100,9 +100,7 @@ def Range(a, b): # wip
             print(" Minimum number cannot be bigger than maximum.")
 
 def Return(Input, _Input):
-    if _Input[0] == "cout":
-        _char2 = "<$Random>"
-
+    if _Input[0] == "echo":
         Input.replace('"', "'")
         _out = f" {_Input[1]}"
 
@@ -128,7 +126,7 @@ def Clear(Input, _Input):
 def LoopReturn(Input, _Input):
     out = ""
 
-    if _Input[0] == "lcout":
+    if _Input[0] == "lecho":
 
         _out = f" {_Input[1]}"
 
@@ -659,18 +657,13 @@ def ByteView(a, b):
         return True
 
 def MkShortcut(a, b):
-    if b[0] in ["ms", "mks", "short", "portal", "witch"]:
-        try:
-            Location = b[1]
-            Destination = b[2]
-            Name = b[3]
-        except:
-            Marg()
-            return
+    if b[0] in ["ms", "mks", "short", "portal"]:
+        Location = b[1]
+        Destination = b[2]
         
         shell = win32com.client.Dispatch("WScript.Shell")
 
-        shortcut = shell.CreateShortCut(f"{os.path.join(Destination, Name)}.lnk") # buggy for now it's WIP
+        shortcut = shell.CreateShortCut(f"{os.path.abspath(Destination)}.lnk")
         shortcut.TargetPath = os.path.abspath(Location)
         shortcut.WindowStyle = 1
 
@@ -681,7 +674,7 @@ def MkShortcut(a, b):
         return True
 
 def CloneURL(a, b):
-    if b[0] in ['wclone', 'corl', 'webclone']:
+    if b[0] in ['wclone', 'webclone']:
         COPY_TO_CLIPBOARD_f = False
 
         try:
@@ -1030,7 +1023,7 @@ def Path(a, b): # Shits suck
             for path in path_list:
                 print(path)
 
-            return
+            return True
         
         if "-mk" in b:
             new_path = os.path.abspath(b[1])
@@ -1062,10 +1055,6 @@ def reverse_file_sort(filepath):
 
 def Fort(a, b): # Stands for FileSort
     if b[0] == "fort":
-        if b[1] == "?":
-            print()
-            return
-        
         FilePath = b[1]
         SortType = b[2]
 
@@ -1074,6 +1063,10 @@ def Fort(a, b): # Stands for FileSort
             ["-reverse", reverse_file_sort]
         ]
 
+        if b[1] == "?":
+            print(SORT_TYPES)
+            return True
+        
         for sorts in SORT_TYPES:
             if SortType in sorts[0]:
                 sorts[1](FilePath)
@@ -1154,7 +1147,9 @@ def BrootMain(a, b):
 
         return True
 
-def GeneralCommands(Input, _Input):
+def t(x): return datetime.datetime.fromtimestamp(x).strftime('%Y-%m-%d %H:%M:%S')
+
+def GeneralCommands(Input, _Input): # These are short commands
     if (_Input[0] == "xy"):
         try:
             X = int(_Input[1])
@@ -1179,16 +1174,50 @@ def GeneralCommands(Input, _Input):
         return True
 
 
-    elif _Input[0] in ["qr", "restart", "r", "upt", "latest", "reset"]:
+    elif _Input[0] in ["qr", "restart", "reset"]:
         os.chdir(os.path.dirname(os.path.realpath(__file__)))
         os.system("python jsc.py") 
         quit()
 
-    elif _Input[0] in ["q", "quit", "bye", "!!", "close"]: quit()
+    elif _Input[0] in ["quit", "close"]: quit()
 
-def CUSTOM_COLOR(red, green, blue): return f'\033[38;2;{red};{green};{blue}m'
+    elif _Input[0] == "exists":
+        filepath = os.path.abspath(_Input[1])
+
+        for root, dirs, files in os.walk(os.path.dirname(filepath)):
+            if os.path.basename(filepath) in files: 
+                print(os.path.abspath(filepath))
+                return True
+            
+        print("Could not find file")
+
+        return True
+    
+    elif _Input[0] == "stat": # this ugly shit only works for fucking files. #kms
+        stat = os.lstat(os.path.abspath(_Input[1]))
+        
+        _ctime = t(stat.st_ctime)
+        _atime = t(stat.st_atime)
+
+        size = stat.st_size
+
+
+        print(f"Showing info for {os.path.abspath(_Input[1])}\n")
+
+        print(f"Size: {size} bytes (KB:{size / 1024}, MB:{size / 1024 / 1024}, GB:{size / (1024 ** 3)})")
+        print(f"Creation Time: {_ctime}\nLast acessed: {_atime}")
+        print(f"Attributes: {stat.st_file_attributes}")
+        print(f"UID: {stat.st_uid}")
+
+        return True
+
+    elif _Input[0] == "shutd": os.system("shutdown -i"); return True
+    elif _Input[0] == "ips": os.system("arp -a"); return True
+
 
 def Ls(a, b):
+    LSPLUS = False
+    
     if b[0] == "ls":
         files = os.listdir()
 
@@ -1250,7 +1279,11 @@ def Curls(a, b):
 
 def WriteFile(a, b):
     if b[0] == "writef":
-        def main(stdscr):  # made by https://github.com/maksimKorzh/ (thanks) kinda broken :(
+        if "-n" in b: 
+            webbrowser.open(os.path.abspath(b[1]))
+            return True
+        
+        def main(stdscr):  # made by https://github.com/maksimKorzh/ (thanks) kinda broken *fuck*
             file_path = b[1]
             screen = curses.initscr()
             screen.nodelay(1)
@@ -1354,15 +1387,14 @@ def WriteFile(a, b):
         curses.wrapper(main)
         return True
     
-def Crypt(a, b):
+def Crypt(a, b): #           buggy shit :fuk:
     ENCRYPT_FLAG = False
     TEXT_MODE = False
 
     if b[0] == "crypt":
-        if "-e" in b: 
-            ENCRYPT_FLAG = True
-        if "-text" in b: 
-            TEXT_MODE = True
+        if "-e" in b: ENCRYPT_FLAG = True
+        if "-text" in b: TEXT_MODE = True
+        if "-passlist" in b: PASSLIST_MODE = True
 
         FilePath = b[1]
         Password = b[2].encode()
@@ -1391,14 +1423,12 @@ def Crypt(a, b):
                         file.write(decrypted_data.decode())
 
                     print(f"Decrypted file: {FilePath}")
-                else:
-                    decrypted_text = cipher.decrypt(FilePath.encode())
-                    print(f"Decrypted text: {decrypted_text.decode()}")
+
         except Exception as e:
             print(f"An error occurred: {e}")
         return True
 
-def Email(a, b): # piece of broken shit
+def Email(a, b):                   # piece of broken shit
     if b[0] in ["email", "gmail"]: # email my@gmail.com you@gmail.com "I love u" "Python!" "<your password>"
         sender_email = b[1]
         receiver_email = b[2]
@@ -1422,7 +1452,7 @@ def Email(a, b): # piece of broken shit
         server.sendmail(sender_email, receiver_email, text)
         server.quit()
 
-      
+
 ############# COMMANDS END #############
 
 CommandList = [ # Once you make a new function, add it here! 
