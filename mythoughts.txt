@@ -1,0 +1,4 @@
+this is where i store my ideas
+
+* add HTMV (html viewer)
+* add more commands

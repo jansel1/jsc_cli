@@ -21,6 +21,7 @@ import re
 import curses
 import base64
 import hashlib
+import pyfiglet
 
 from cryptography.fernet import Fernet
 
@@ -1452,6 +1453,39 @@ def Email(a, b):                   # piece of broken shit
         server.sendmail(sender_email, receiver_email, text)
         server.quit()
 
+def HTMV(a, b):
+    if b[0] == "htmv":
+        filepath = b[1]
+
+        contents = []
+
+        with open(filepath, 'r') as f:
+            contents = f.readlines()
+        
+        if len(contents) == 0: print("File contents are empty."); return
+
+        figlet = pyfiglet.Figlet(font='slant')
+
+        for line in contents:
+
+            if "color: green" in line:
+                line = f"{colorama.Fore.GREEN}{line}{colorama.Fore.RESET}"
+            elif "color: cyan" in line:
+                line = f"{colorama.Fore.CYAN}{line}{colorama.Fore.RESET}"
+            elif "color: yellow" in line:
+                line = f"{colorama.Fore.YELLOW}{line}{colorama.Fore.RESET}"
+            elif "color: blue" in line:
+                line = f"{colorama.Fore.BLUE}{line}{colorama.Fore.RESET}"
+            elif "color: red" in line:
+                line = f"{colorama.Fore.RED}{line}{colorama.Fore.RESET}"
+
+            clean_line = re.sub(r'<[^>]+>', '', line)
+
+            if line.startswith("<h1>"): clean_line = figlet.renderText(re.sub(r'<[^>]+>', '', line))
+            
+            print(clean_line)
+
+        return True
 
 ############# COMMANDS END #############
 
@@ -1506,5 +1540,6 @@ CommandList = [ # Once you make a new function, add it here!
     Curls,
     WriteFile,          # BUGGY
     Crypt,
-    Email
+    Email,
+    HTMV
 ]
