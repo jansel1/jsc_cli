@@ -296,17 +296,23 @@ def Save(a, b):
         return True
 
 def Ip(a, b):
-    dat_hn = f" {socket.gethostname()}"
-    dat_ip = f" {socket.gethostbyname(socket.gethostname())}"
-
-    dat = f"{dat_hn}\n{dat_ip}"
-
     if b[0] == "ip":
+        dat_hn = f" {socket.gethostname()}"
+        dat_ip = f" {socket.gethostbyname(socket.gethostname())}"
+
+        dat = f"{dat_hn}\n{dat_ip}"
+
         external_ip = urllib.request.urlopen('https://ipinfo.io').read().decode('utf8')
         city = urllib.request.urlopen('https://ipinfo.io/city').read().decode('utf8')
+        geolocation = urllib.request.urlopen('https://ipinfo.io/country').read().decode('utf8')
+
 
         print(f" IP data:\n {external_ip}")
+        print(f"Geo-Location COUNTRY: {geolocation}")
+        print(f"Geo-Location CITY: {city}")
+
         print(f"Other:\n HOSTNAME: {dat_hn}\n PRIVATE: {dat_ip}")
+        os.system("ipconfig")
 
         return True
 
