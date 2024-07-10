@@ -1495,7 +1495,9 @@ def HTMV(a, b):
 
         return True
 
-def 
+def AddAttr(a, b):
+    ...
+    
 ############# COMMANDS END #############
 
 CommandList = [ # Once you make a new function, add it here! 
