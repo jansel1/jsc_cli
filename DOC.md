@@ -1,6 +1,7 @@
 # JSC Pre-Release Beta Alpha v1.1.2 : 46 Commands (PBA1.1.2:46)
 
 # Command Documentation
+**This page might be moved to a command inside JSC.**
 
 ## General Commands:
 

@@ -535,7 +535,7 @@ def hello(full, split):
       print("Halloes!")
       return True
       
-def Hide(a, b):
+def Hide(a, b):                             #FIX: Flags are wierd. Use new flag type.
     def attr(c, d):
         try:
             subprocess.check_call(["attrib", d, c])
@@ -1496,8 +1496,47 @@ def HTMV(a, b):
         return True
 
 def AddAttr(a, b):
-    ...
-    
+    if b[0] == "attr":
+        FilePath = os.path.abspath(b[1])
+        Attributes = b[2:]
+
+        attributeList = []
+
+        def attr(c, d):
+            try:
+                subprocess.check_call(["attrib", d, c])
+            except: 
+                print(f"Could not add attribute to file/folder '{c}'.")
+        
+        for _at in Attributes:
+            if _at.lower() == "+readonly": attributeList.append("+R")
+            if _at.lower() == "-readonly": attributeList.append("-R")
+            if _at.lower() == "+hidden": attributeList.append("+H")
+            if _at.lower() == "-hidden": attributeList.append("-H")
+            if _at.lower() == "+system": attributeList.append("+S")
+            if _at.lower() == "-system": attributeList.append("-S")
+            if _at.lower() == "+archive": attributeList.append("+A")
+            if _at.lower() == "-archive": attributeList.append("-A")
+            if _at.lower() == "+nci": attributeList.append("+I") # Not Content Indexed
+            if _at.lower() == "-nci": attributeList.append("-I")
+            if _at.lower() == "+offline": attributeList.append("+O")
+            if _at.lower() == "-offline": attributeList.append("-O")
+            if _at.lower() == "+temporary": attributeList.append("+T")
+            if _at.lower() == "-temporary": attributeList.append("-T")
+            if _at.lower() == "+sparsefile": attributeList.append("+P")
+            if _at.lower() == "-sparsefile": attributeList.append("-P")
+            if _at.lower() == "+reparsepoint": attributeList.append("+L")
+            if _at.lower() == "-reparsepoint": attributeList.append("-L")
+            if _at.lower() == "+compressed": attributeList.append("+C")
+            if _at.lower() == "-compressed": attributeList.append("-C")
+            if _at.lower() == "+encrypted": attributeList.append("+E")
+            if _at.lower() == "-encrypted": attributeList.append("-E")
+                
+            for _at in attributeList: attr(FilePath, _at)
+
+        return True
+
+
 ############# COMMANDS END #############
 
 CommandList = [ # Once you make a new function, add it here! 
@@ -1507,5 +1546,5 @@ CommandList = [ # Once you make a new function, add it here!
     Random, Explorer, Open, ByteView, MkShortcut, CloneURL, WebStat,
     FindFile, VariableDef, SpewVariables, Range, ListMk, Process, SysData,
     PythonUtils, Path, NameDelta, Fort, BrootMain, GeneralCommands, Ls,
-    Curls, WriteFile, Crypt, Email, HTMV
+    Curls, WriteFile, Crypt, Email, HTMV, AddAttr
 ]
