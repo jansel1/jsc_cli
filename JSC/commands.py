@@ -178,21 +178,22 @@ def ReadFile(Input, _Input):
         return True
 
 def Delta(Input, _Input):
-    if _Input[0] in ["delta", "del"]:
-        FilePath = _Input[1]
+    if _Input[0] in ["delta", "del", 'delete']:
+        FilePaths = _Input[1].split(',')
 
-        if os.path.exists(FilePath) == False:
-            print(" Directory dosen't exist")
-            return
-        try:
-            if os.path.isfile(FilePath):
-                os.remove(FilePath)
-            elif os.path.isdir(FilePath):
-                shutil.rmtree(FilePath)
-            
-            print(f" Removed file/folder '{FilePath}' sucessfully")
-        except:
-            print(" Could not remove directory/folder.")
+        for FilePath in FilePaths:
+            if os.path.exists(FilePath) == False:
+                print(" Directory dosen't exist")
+                return
+            try:
+                if os.path.isfile(FilePath):
+                    os.remove(FilePath)
+                elif os.path.isdir(FilePath):
+                    shutil.rmtree(FilePath)
+                
+                print(f" Removed file/folder '{FilePath}' sucessfully")
+            except:
+                print(" Could not remove directory/folder.")
 
         return True
 
@@ -339,13 +340,13 @@ def Reg(a, b):
         return True
 
 def Blank(a, b):
-    if b[0] == "blk":
-        try:
-            Directory = b[1]
-        except:
-            Marg()
+    if b[0] in ["blk", "blank"]:
+        DELETE_FLAG = False
 
+        Directory = b[1]
         
+        if "-del" in b: DELETE_FLAG = True
+
         if os.path.exists(Directory) == False:
             print(" Directory dosen't exist")
             return
@@ -356,11 +357,14 @@ def Blank(a, b):
                     path = os.path.join(root, _f)
 
                     with open(path, "w+") as f:
-                        f.write("") # lmao
+                        if not DELETE_FLAG:
+                            f.write("") # lmao
+                        else:
+                            os.remove(f.name)
                     
-                    print(f" Blank'ed {path}!")
-        except:
-            print(f"Could not blank {Directory}")
+                    print(f" Blank'ed {path}")
+        except Exception as e:
+            print(f"Could not blank {Directory}: {e}")
         return True
 
 def Corrupt(a, b):
@@ -377,12 +381,12 @@ def Corrupt(a, b):
         
         try:
             with open(File, 'wb') as file:
-                for i in range(255):
+                for i in range(25000000):
                     file.write(chr(random.randbytes(255)))
 
             print(f"Corrupted '{File}'")
-        except:
-            print("Could not corrupt file.")
+        except Exception as e:
+            print(f"Could not corrupt file. {e}")
         return True
 
 def C(a, b):
@@ -1464,10 +1468,14 @@ def HTMV(a, b):
         
         if len(contents) == 0: print("File contents are empty."); return
 
-        figlet = pyfiglet.Figlet(font='slant')
+        figlet = pyfiglet.Figlet(font='big')
 
         for line in contents:
+            if len(line) == 0: line = ""
 
+            line = line.replace("<br>", "\t")
+            line = line.replace("<hr>", "-"*os.get_terminal_size().columns)
+            
             if "color: green" in line:
                 line = f"{colorama.Fore.GREEN}{line}{colorama.Fore.RESET}"
             elif "color: cyan" in line:
@@ -1482,7 +1490,7 @@ def HTMV(a, b):
             clean_line = re.sub(r'<[^>]+>', '', line)
 
             if line.startswith("<h1>"): clean_line = figlet.renderText(re.sub(r'<[^>]+>', '', line))
-            
+
             print(clean_line)
 
         return True
